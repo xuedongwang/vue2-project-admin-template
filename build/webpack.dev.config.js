@@ -14,7 +14,7 @@ const config = {
     alias: {
       '@': path.join(__dirname, '../src')
     },
-    extensions: ['.js', '.vue', '.json']
+    extensions: ['.js', '.vue', '.scss', '.json']
   },
   devtool: 'source-map',
   stats: 'errors-warnings',
