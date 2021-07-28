@@ -3,6 +3,7 @@ import { shallowMount } from '@vue/test-utils';
 import Counter from '../src/components/counter/index';
 import Vue from 'vue';
 
+/* eslint-disable no-unused-expressions */
 describe('测试 Counter.vue 组件', () => {
   // 挂载元素
   const wrapper = shallowMount(Counter);

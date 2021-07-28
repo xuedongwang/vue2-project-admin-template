@@ -10,8 +10,7 @@
     "dev": "webpack serve --config=./build/webpack.dev.config.js",
     "test:unit": "cross-env NODE_ENV=test karma start --single-run",
     "build": "webpack --config=./build/webpack.prod.config.js",
-    "lint": "eslint --ext=.vue,.js src/ build/",
-    "lint:fix": "eslint --fix --ext=.vue,.js src/ build/ test/",
+    "lint": "eslint --fix --ext=.vue,.js src/ build/ test/ shell/",
     "commit": "node ./shell/commit.js"
   },
   "keywords": [],
