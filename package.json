@@ -24,6 +24,7 @@
     "babel-loader": "^8.2.2",
     "babel-plugin-istanbul": "^6.0.0",
     "chai": "^4.3.4",
+    "copy-webpack-plugin": "^9.0.1",
     "cross-env": "^7.0.3",
     "css-loader": "^5.2.6",
     "eslint": "^7.30.0",

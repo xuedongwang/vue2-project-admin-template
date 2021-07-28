@@ -1,6 +1,7 @@
 const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const { VueLoaderPlugin } = require('vue-loader');
+const CopyPlugin = require("copy-webpack-plugin");
 
 const config = {
   target: 'web',
@@ -10,7 +11,7 @@ const config = {
   },
   resolve: {
     alias: {
-      $: path.join(__dirname, '../src')
+      '@': path.join(__dirname, '../src')
     },
     extensions: ['.js', '.vue', '.json']
   },
@@ -72,13 +73,22 @@ const config = {
   },
   output: {
     path: path.join(__dirname, '../dist'),
-    filename: '[name].js'
+    filename: '[name].js',
+    clean: true
   },
   plugins: [
     new HtmlWebpackPlugin({
       template: path.join(__dirname, '../index.html')
     }),
-    new VueLoaderPlugin()
+    new VueLoaderPlugin(),
+    new CopyPlugin({
+      patterns: [
+        {
+          from: path.join(__dirname, '../public'),
+          to: path.join(__dirname, '../dist')
+        },
+      ],
+    }),
   ]
 };
 
