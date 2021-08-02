@@ -4,6 +4,7 @@ const CssMinimizerPlugin = require("css-minimizer-webpack-plugin");
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const { VueLoaderPlugin } = require('vue-loader');
 const CopyPlugin = require('copy-webpack-plugin');
+const CompressionPlugin = require("compression-webpack-plugin");
 
 const config = {
   target: 'web',
@@ -120,6 +121,9 @@ const config = {
       filename: 'css/[name]_[contenthash:6].css'
     }),
     new CssMinimizerPlugin(),
+    new CompressionPlugin({
+      test: /\.js$/
+    })
   ]
 };
 
