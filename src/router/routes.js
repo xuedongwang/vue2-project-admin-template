@@ -12,6 +12,13 @@ const routes = [
     meta: {
       layout: 'BlankLayout'
     }
+  },
+  {
+    path: '*',
+    component: () => import('../pages/404/index.vue'),
+    meta: {
+      layout: 'BlankLayout'
+    }
   }
 ];
 
