@@ -14,6 +14,9 @@ export default {
   components: {
     BlankLayout,
     CommonLayout
+  },
+  mounted() {
+    console.log('store:', this.$store);
   }
 };
 </script>

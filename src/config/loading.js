@@ -1,5 +1,5 @@
 // loading config
-const LOGIN_CLOSE_STATUS = false;
-const LOGIN_OPEN_STATUC = {
+export const LOGIN_CLOSE_STATUS = false;
+export const LOGIN_OPEN_STATUC = {
   delay: 300
 };

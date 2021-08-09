@@ -56,7 +56,5 @@ export default {
 .register {
   height: 100vh;
   background: #ececec;
-  .form {
-  }
 }
 </style>

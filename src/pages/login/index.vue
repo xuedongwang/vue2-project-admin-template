@@ -52,7 +52,5 @@ export default {
 .login {
   height: 100vh;
   background: #ececec;
-  .form {
-  }
 }
 </style>
