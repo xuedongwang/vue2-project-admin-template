@@ -1,7 +1,7 @@
 <template>
-  <a-row type="flex" class="login" justify="space-around" align="middle">
+  <a-row type="flex" class="register" justify="space-around" align="middle">
     <a-col flex="500px">
-      <a-card title="登录" :bordered="false" >
+      <a-card title="注册帐号" :bordered="false" >
         <a-form-model class="form" :layout="formLayout" :model="form" v-bind="formItemLayout">
           <a-form-model-item label="帐号">
             <a-input v-model="form.account" placeholder="请输入帐号" />
@@ -9,8 +9,11 @@
           <a-form-model-item label="密码">
             <a-input v-model="form.password" placeholder="请输入密码" />
           </a-form-model-item>
+          <a-form-model-item label="确认密码">
+            <a-input v-model="form.confirmPassword" placeholder="请再次输入密码" />
+          </a-form-model-item>
           <a-form-model-item :wrapper-col="buttonItemLayout">
-            <a-button type="primary" @click="handleLogin" :loading="loginLoading">登录</a-button>
+            <a-button type="primary" @click="handleRegister" :loading="registerLoading">注册</a-button>
           </a-form-model-item>
         </a-form-model>
       </a-card>
@@ -20,14 +23,15 @@
 
 <script>
 export default {
-  name: 'login',
+  name: 'register',
   data () {
     return {
       form: {
         account: '',
-        password: ''
+        password: '',
+        confirmPassword: ''
       },
-      loginLoading: false,
+      registerLoading: false,
       formLayout: 'horizontal',
       formItemLayout: {
         labelCol: { span: 4 },
@@ -40,8 +44,8 @@ export default {
     };
   },
   methods: {
-    handleLogin () {
-      // this.loginLoading = {}
+    handleRegister () {
+      // this.registerLoading = {}
       console.log(this.form);
     }
   }
@@ -49,7 +53,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.login {
+.register {
   height: 100vh;
   background: #ececec;
   .form {
