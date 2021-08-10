@@ -4,14 +4,15 @@
       <a-menu :theme="menu.theme" mode="inline" :default-selected-keys="['1']">
         <template v-for="menuItem of menu.list" >
           <a-sub-menu :key="menuItem.key" v-if="menuItem.children && menuItem.children.length > 0">
-            <span slot="title"><a-icon :type="menuItem.icon" /><span>{{ menuItem.title }}</span></span>
+            <span slot="title"><a-icon v-if="menuItem.icon" :type="menuItem.icon" /><span>{{ menuItem.title }}</span></span>
             <a-menu-item v-for="menuItemChild of menuItem.children" :key="menuItemChild.key">
               {{ menuItemChild.title }}
             </a-menu-item>
           </a-sub-menu>
           <a-menu-item :key="menuItem.key" v-else>
-            <a-icon :type="menuItem.icon" />
-            <span style="margin-left: -5px;">{{ menuItem.title }}</span>
+            <a-icon v-if="menuItem.icon" :type="menuItem.icon" />
+            <span v-if="menuItem.icon" style="margin-left: -5px;">{{ menuItem.title }}</span>
+            <span v-else>{{ menuItem.title }}</span>
           </a-menu-item>
         </template>
 
