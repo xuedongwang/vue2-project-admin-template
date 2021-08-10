@@ -51,6 +51,5 @@ export default {
 <style lang="scss" scoped>
 .login {
   height: 100vh;
-  background: #ececec;
 }
 </style>

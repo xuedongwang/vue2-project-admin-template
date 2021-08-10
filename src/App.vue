@@ -15,7 +15,7 @@ export default {
     BlankLayout,
     CommonLayout
   },
-  mounted() {
+  mounted () {
     console.log('store:', this.$store);
   }
 };

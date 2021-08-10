@@ -55,6 +55,5 @@ export default {
 <style lang="scss" scoped>
 .register {
   height: 100vh;
-  background: #ececec;
 }
 </style>
