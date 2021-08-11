@@ -31,30 +31,77 @@
           <a-tag color="red">超级管理员</a-tag>
           <!-- <a-tag color="green">管理员</a-tag>
           <a-tag color="blue">普通用户</a-tag> -->
-          <a-avatar size="large" icon="user" />
+          <a-dropdown :trigger="['click']">
+            <a-avatar size="large" icon="user" class="pointer" />
+            <a-menu slot="overlay">
+              <template v-for="(item, index) of avatarDropDownMenuListt">
+                <a-menu-item :key="index" v-if="item.type === 'link'">
+                  <a v-bind="item.props">{{ item.title }}</a>
+                </a-menu-item>
+                <a-menu-divider :key="index" v-else-if="item.type === 'divider'" />
+                <a-menu-item @click="item.handler(item.name)" :key="index" v-else-if="item.type === 'text'">
+                  {{ item.title }}
+                </a-menu-item>
+              </template>
+            </a-menu>
+          </a-dropdown>
         </div>
       </a-layout-header>
-      <a-layout-content class="content">
+      <a-layout-content class="content" :class="{'has-breadcumb': hasBreadcrumb}">
+        <a-breadcrumb class="breadcrumb" v-if="hasBreadcrumb">
+          <template v-for="item of breadcrumb">
+            <a-breadcrumb-item v-if="item.path" :key="item.title">
+              <a :href="item.path">{{ item.title }}</a>
+            </a-breadcrumb-item>
+            <a-breadcrumb-item :key="item.title" v-else>{{ item.title }}</a-breadcrumb-item>
+          </template>
+        </a-breadcrumb>
         <slot></slot>
       </a-layout-content>
     </a-layout>
   </a-layout>
 </template>
 <script>
+import { menu } from '@/config';
 export default {
   data () {
     return {
       collapsed: false,
-      menu: this.$store.state.config.menu,
-      currentMenu: []
+      menu,
+      currentMenu: [],
+      avatarDropDownMenuListt: [
+        {
+          title: '个人资料',
+          type: 'link',
+          props: {
+            href: '/profiles',
+            target: '__blank'
+          }
+        },
+        {
+          type: 'divider'
+        },
+        {
+          title: '退出',
+          type: 'text',
+          handler: () => {
+            this.$store.dispatch('loginOut');
+          }
+        }
+      ]
     };
   },
+  computed: {
+    breadcrumb() {
+      return this.$store.state.breadcrumb;
+    },
+    hasBreadcrumb() {
+      return this.breadcrumb.length > 0;
+    }
+  },
   methods: {
-    handleMenuSelect({ key: name }) {
-      console.log(name);
-      this.$router.push({
-        name
-      });
+    handleMenuSelect({ key: path }) {
+      this.$router.push(path);
     },
     setPathFromRoute(route) {
       this.currentMenu = [route.path];
@@ -92,10 +139,14 @@ export default {
   }
   .content {
     margin: 16px;
-    padding: 20px;
-    background: #fff;
     min-height: 280px;
     flex: none;
+    &.has-breadcumb {
+      margin-top: 0;
+    }
+    .breadcrumb {
+      padding: 10px 0;
+    }
   }
   
 }

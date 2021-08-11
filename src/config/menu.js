@@ -1,6 +1,6 @@
 
 export default {
-  theme: 'dark', // light|dark
+  theme: 'light', // light|dark
   mode: 'inline',
   'default-selected-keys': ['1'],
   list: [
@@ -8,19 +8,16 @@ export default {
       key: '/',
       icon: 'home',
       title: '主页',
-      disabled: false
     },
     {
-      key: 'file-text',
+      key: '/article',
       icon: 'file-text',
       title: '文章管理',
-      disabled: true
     },
     {
-      key: 'book',
+      key: '/category',
       icon: 'book',
-      title: '分类管理',
-      disabled: true
+      title: '分类管理'
     },
     {
       key: 'tags',

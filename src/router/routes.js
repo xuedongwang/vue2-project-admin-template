@@ -1,8 +1,21 @@
 const routes = [
   {
-    name: 'home',
     path: '/',
     component: () => import('../pages/home'),
+    meta: {
+      layout: 'CommonLayout'
+    }
+  },
+  {
+    path: '/article',
+    component: () => import('../pages/article'),
+    meta: {
+      layout: 'CommonLayout'
+    }
+  },
+  {
+    path: '/category',
+    component: () => import('../pages/category'),
     meta: {
       layout: 'CommonLayout'
     }
