@@ -8,9 +8,16 @@ const routes = [
   },
   {
     path: '/article',
-    component: () => import('../pages/article'),
+    component: () => import('../pages/article/manage'),
     meta: {
       layout: 'CommonLayout'
+    }
+  },
+  {
+    path: '/article/create/:id',
+    component: () => import('../pages/article/create'),
+    meta: {
+      layout: 'BlankLayout'
     }
   },
   {

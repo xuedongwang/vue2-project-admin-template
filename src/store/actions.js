@@ -1,6 +1,6 @@
 import { CONST } from '@/config';
 const actions = {
-  loginOut({ state }) {
+  loginOut ({ state }) {
     localStorage.removeItem(CONST.TOKEN_KEY);
     state.router.replace('/login');
   }

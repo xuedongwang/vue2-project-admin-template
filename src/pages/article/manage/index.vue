@@ -40,25 +40,25 @@ const columns = [
     title: 'name',
     dataIndex: 'name',
     width: '25%',
-    scopedSlots: { customRender: 'name' },
+    scopedSlots: { customRender: 'name' }
   },
   {
     title: 'age',
     dataIndex: 'age',
     width: '15%',
-    scopedSlots: { customRender: 'age' },
+    scopedSlots: { customRender: 'age' }
   },
   {
     title: 'address',
     dataIndex: 'address',
-    scopedSlots: { customRender: 'address' },
+    scopedSlots: { customRender: 'address' }
   },
   {
     title: '操作',
     dataIndex: 'operation',
     width: '100px',
-    scopedSlots: { customRender: 'operation' },
-  },
+    scopedSlots: { customRender: 'operation' }
+  }
 ];
 const data = [];
 for (let i = 0; i < 100; i++) {
@@ -66,7 +66,7 @@ for (let i = 0; i < 100; i++) {
     key: i.toString(),
     name: `Edrward ${i}`,
     age: 32,
-    address: `London Park no. ${i}`,
+    address: `London Park no. ${i}`
   });
 }
 export default {
@@ -78,18 +78,29 @@ export default {
       loading: ''
     };
   },
+  breadcrumb: [
+    {
+      title: '主页',
+      path: '/'
+    },
+    {
+      title: '创建文章',
+      path: ''
+    }
+  ],
   title () {
     return this.name;
   },
   methods: {
-    handleEdit(key) {
+    handleEdit (key) {
       console.log(key);
     },
-    handleCreateArticle() {
+    handleCreateArticle () {
       this.loading = 'create';
       setTimeout(() => {
         this.loading = '';
-      }, 1000)
+        this.$router.push(`/article/create/${Date.now()}`);
+      }, 1000);
     }
   }
 };

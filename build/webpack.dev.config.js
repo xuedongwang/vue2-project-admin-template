@@ -84,6 +84,7 @@ const config = {
     clientLogLevel: 'info'
   },
   output: {
+    publicPath: '/',
     path: path.join(__dirname, '../dist'),
     filename: '[name].js'
   },

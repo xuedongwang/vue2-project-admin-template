@@ -3,16 +3,7 @@ import router from '@/router';
 const state = {
   config,
   router,
-  breadcrumb: [
-    {
-      title: '主页',
-      path: '/'
-    },
-    {
-      title: '创建文章',
-      path: ''
-    }
-  ]
+  breadcrumb: []
 };
 
 export default state;

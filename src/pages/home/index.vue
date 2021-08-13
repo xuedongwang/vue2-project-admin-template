@@ -42,6 +42,18 @@ export default {
       name: '主页'
     };
   },
+  breadcrumb () {
+    return [
+      {
+        title: '主页',
+        path: '/'
+      },
+      {
+        title: '创建文章1',
+        path: ''
+      }
+    ];
+  },
   title () {
     return this.name;
   }

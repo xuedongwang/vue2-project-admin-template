@@ -34,7 +34,7 @@
           <a-dropdown :trigger="['click']">
             <a-avatar size="large" icon="user" class="pointer" />
             <a-menu slot="overlay">
-              <template v-for="(item, index) of avatarDropDownMenuListt">
+              <template v-for="(item, index) of avatarDropDownMenuList">
                 <a-menu-item :key="index" v-if="item.type === 'link'">
                   <a v-bind="item.props">{{ item.title }}</a>
                 </a-menu-item>
@@ -69,7 +69,7 @@ export default {
       collapsed: false,
       menu,
       currentMenu: [],
-      avatarDropDownMenuListt: [
+      avatarDropDownMenuList: [
         {
           title: '个人资料',
           type: 'link',
@@ -92,25 +92,25 @@ export default {
     };
   },
   computed: {
-    breadcrumb() {
+    breadcrumb () {
       return this.$store.state.breadcrumb;
     },
-    hasBreadcrumb() {
+    hasBreadcrumb () {
       return this.breadcrumb.length > 0;
     }
   },
   methods: {
-    handleMenuSelect({ key: path }) {
+    handleMenuSelect ({ key: path }) {
       this.$router.push(path);
     },
-    setPathFromRoute(route) {
+    setPathFromRoute (route) {
       this.currentMenu = [route.path];
     }
   },
-  created() {
+  created () {
     this.setPathFromRoute(this.$route);
   },
-  beforeRouteUpdate(to) {
+  beforeRouteUpdate (to) {
     this.setPathFromRoute(to);
   }
 };
@@ -148,6 +148,6 @@ export default {
       padding: 10px 0;
     }
   }
-  
+
 }
 </style>

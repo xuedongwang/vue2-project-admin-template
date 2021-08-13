@@ -7,12 +7,12 @@ export default {
     {
       key: '/',
       icon: 'home',
-      title: '主页',
+      title: '主页'
     },
     {
       key: '/article',
       icon: 'file-text',
-      title: '文章管理',
+      title: '文章管理'
     },
     {
       key: '/category',
@@ -54,6 +54,6 @@ export default {
       icon: 'delete',
       title: '回收站',
       disabled: true
-    },
+    }
   ]
 };
