@@ -11,15 +11,12 @@ const breadcrumbMixin = {
   created () {
     const breadcrumb = getBreadcrumb(this);
     if (breadcrumb) {
-      this.currentVM = this;
       this.$store.commit('setBreadcrumb', breadcrumb);
-      console.log('created', breadcrumb);
     }
   },
   beforeDestroy () {
     const breadcrumb = getBreadcrumb(this);
     if (breadcrumb) {
-      console.log('beforeDestroy', breadcrumb);
       this.$store.commit('setBreadcrumb', []);
     }
   }

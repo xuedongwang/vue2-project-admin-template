@@ -13,7 +13,7 @@ export default {
     RichEditor,
     RichEditorMenu
   }
-}
+};
 </script>
 
 <style>

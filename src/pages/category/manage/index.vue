@@ -70,6 +70,12 @@ for (let i = 0; i < 100; i++) {
   });
 }
 export default {
+  breadcrumb: [
+    {
+      title: '主页',
+      path: '/'
+    },
+  ],
   data () {
     return {
       name: '分类管理',
@@ -89,6 +95,12 @@ export default {
       this.loading = 'create';
       setTimeout(() => {
         this.loading = '';
+        this.$router.push({
+          name: 'create-category',
+          params: {
+            id: Date.now()
+          }
+        });
       }, 1000);
     }
   }

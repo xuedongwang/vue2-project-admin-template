@@ -7,6 +7,7 @@ const routes = [
     }
   },
   {
+    name: 'article-manage',
     path: '/article',
     component: () => import('../pages/article/manage'),
     meta: {
@@ -14,20 +15,33 @@ const routes = [
     }
   },
   {
+    name: 'create-article',
     path: '/article/create/:id',
+    alias: '/article/edit/:id',
     component: () => import('../pages/article/create'),
     meta: {
       layout: 'BlankLayout'
     }
   },
   {
+    name: 'category-manage',
     path: '/category',
-    component: () => import('../pages/category'),
+    component: () => import('../pages/category/manage'),
     meta: {
       layout: 'CommonLayout'
     }
   },
   {
+    name: 'create-category',
+    path: '/category/create/:id',
+    alias: '/category/edit/:id',
+    component: () => import('../pages/category/create'),
+    meta: {
+      layout: 'CommonLayout'
+    }
+  },
+  {
+    name: 'login',
     path: '/login',
     component: () => import('../pages/login'),
     meta: {
@@ -35,6 +49,7 @@ const routes = [
     }
   },
   {
+    name: 'register',
     path: '/register',
     component: () => import('../pages/register'),
     meta: {
@@ -42,6 +57,7 @@ const routes = [
     }
   },
   {
+    name: '403',
     path: '/403',
     component: () => import('../pages/403'),
     meta: {
@@ -49,6 +65,7 @@ const routes = [
     }
   },
   {
+    name: 'not-fount',
     path: '*',
     component: () => import('../pages/404'),
     meta: {

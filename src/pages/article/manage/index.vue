@@ -84,7 +84,7 @@ export default {
       path: '/'
     },
     {
-      title: '创建文章',
+      title: '创建文章22',
       path: ''
     }
   ],
@@ -94,12 +94,19 @@ export default {
   methods: {
     handleEdit (key) {
       console.log(key);
+      const path = `/article/edit/${key}`;
+      this.$router.push(path);
     },
     handleCreateArticle () {
       this.loading = 'create';
       setTimeout(() => {
         this.loading = '';
-        this.$router.push(`/article/create/${Date.now()}`);
+        this.$router.push({
+          name: 'create-article',
+          params: {
+            id: Date.now()
+          }
+        });
       }, 1000);
     }
   }
