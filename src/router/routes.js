@@ -15,6 +15,14 @@ const routes = [
     }
   },
   {
+    name: 'message',
+    path: '/message',
+    component: () => import('../pages/message'),
+    meta: {
+      layout: 'CommonLayout'
+    }
+  },
+  {
     name: 'create-article',
     path: '/article/create/:id',
     alias: '/article/edit/:id',

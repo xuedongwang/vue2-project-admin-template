@@ -111,7 +111,7 @@ export default {
     RichEditor
   },
   computed: {
-    isEdit() {
+    isEdit () {
       return this.$route.path.includes('/article/edit');
     }
   },

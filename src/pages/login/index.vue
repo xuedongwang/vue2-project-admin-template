@@ -12,6 +12,12 @@
           <a-form-model-item :wrapper-col="buttonItemLayout">
             <a-button type="primary" @click="handleLogin" :loading="loginLoading">登录</a-button>
           </a-form-model-item>
+          <a-form-model-item :wrapper-col="buttonItemLayout">
+            登录遇到问题：
+            <router-link to="register">注册帐号</router-link>
+            <a-divider type="vertical" />
+            <router-link to="register">找回密码</router-link>
+          </a-form-model-item>
         </a-form-model>
       </a-card>
     </a-col>

@@ -20,16 +20,21 @@ export default {
       title: '分类管理'
     },
     {
+      key: '/user',
+      icon: 'user',
+      title: '用户管理',
+      disabled: true
+    },
+    {
       key: 'tags',
       icon: 'tags',
       title: '标签管理',
       disabled: true
     },
     {
-      key: 'message',
+      key: '/message',
       icon: 'message',
-      title: '留言管理',
-      disabled: true
+      title: '留言管理'
     },
     {
       key: 'folder-open',

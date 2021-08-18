@@ -30,7 +30,7 @@ export default {
       loading: '',
       form: {
         name: '',
-        description: '',
+        description: ''
       },
       formItemLayout: {
         labelCol: { span: 2 },
@@ -48,11 +48,11 @@ export default {
         description: [
           { min: 0, max: 500, message: '文章描述长度最长为500', trigger: 'blur' }
         ]
-      },
+      }
     };
   },
   methods: {
-    handleCreateCategory() {
+    handleCreateCategory () {
       console.log('submit!', this.form);
     },
     handleResetForm () {
