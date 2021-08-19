@@ -1,16 +1,10 @@
 <template>
   <div class="message">
-    <a-card :bordered="false">
-      <a-tabs default-active-key="1" tab-position="left">
-        <a-tab-pane :tab="tab.title" v-for="tab of tabs" :key="tab.key">
-          <a-card title="Card title" :bordered="false">
-            <p>Card content</p>
-            <p>Card content</p>
-            <p>Card content</p>
-          </a-card>
-        </a-tab-pane>
-      </a-tabs>
-    </a-card>
+    <a-row>
+      <a-col style="width:300px;">
+        <tab-menu v-model="value" :tabs="tabs"></tab-menu>
+      </a-col>
+    </a-row>
   </div>
 </template>
 
@@ -18,19 +12,19 @@
 export default {
   data () {
     return {
-      value: 'a',
+      value: '1',
       tabs: [
         {
-          title: '全部消息',
-          key: '1'
+          text: '全部消息',
+          id: '1'
         },
         {
-          title: '评论',
-          key: '2'
+          text: '评论',
+          id: '2'
         },
         {
-          title: '系统通知',
-          key: '3'
+          text: '系统通知',
+          id: '3'
         }
       ]
     };
