@@ -24,12 +24,12 @@ export default {
     },
     tabs: {
       type: Array,
-      default() {
-        return []
+      default () {
+        return [];
       }
     }
   }
-}
+};
 </script>
 
 <style lang="scss" scoped>
@@ -49,6 +49,7 @@ export default {
       &--active {
         border-left-color: #25b864;
         border-left-width: 2px;
+        padding-left: 23px;
         font-weight: 500;
         color: #262626;
       }

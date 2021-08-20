@@ -26,7 +26,6 @@ export default {
   name: 'register',
   data () {
     function validator (rule, value, callback) {
-      const form = this.form;
       if (value && value !== this.form.password) {
         callback('两次输入的密码不一致');
       } else {
