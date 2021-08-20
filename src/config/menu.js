@@ -43,10 +43,9 @@ export default {
       disabled: true
     },
     {
-      key: 'setting',
+      key: '/settings/profile',
       icon: 'setting',
-      title: '网站设置',
-      disabled: true
+      title: '网站设置'
     },
     {
       key: 'pay-circle',

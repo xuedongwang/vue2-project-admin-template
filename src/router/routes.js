@@ -23,6 +23,14 @@ const routes = [
     }
   },
   {
+    name: 'settings',
+    path: '/settings/:type',
+    component: () => import('../pages/settings'),
+    meta: {
+      layout: 'CommonLayout'
+    }
+  },
+  {
     name: 'create-article',
     path: '/article/create/:id',
     alias: '/article/edit/:id',

@@ -110,8 +110,9 @@ export default {
   created () {
     this.setPathFromRoute(this.$route);
   },
-  beforeRouteUpdate (to) {
+  beforeRouteUpdate (to, from, next) {
     this.setPathFromRoute(to);
+    next();
   }
 };
 </script>
