@@ -27,7 +27,8 @@ export default {
   data () {
     function validator (rule, value, callback) {
       if (value && value !== this.form.password) {
-        callback('两次输入的密码不一致');
+        const err = '两次输入的密码不一致';
+        callback(err);
       } else {
         callback();
       }

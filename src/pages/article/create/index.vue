@@ -1,6 +1,6 @@
 <template>
   <div class="create-article">
-    <a-row>
+    <a-row v-if="false">
       <a-col :span="24">
         <a-page-header
           :title="`${isEdit ? '编辑' : '创建'}文章`"

@@ -81,11 +81,11 @@ export default {
       ]
     };
   },
-  created() {
+  created () {
     this.value = this.$route.params.type;
   },
   methods: {
-    handleInput(value) {
+    handleInput (value) {
       if (this.value === value) {
         return;
       }
