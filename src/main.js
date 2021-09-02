@@ -5,6 +5,7 @@ import App from './App.vue';
 import store from './store';
 import router from './router';
 import { titleMixin, breadcrumbMixin } from './mixins';
+import { $event } from './utils';
 import TabMenu from './components/tab-menu';
 
 import './assets/scss';
@@ -14,6 +15,7 @@ Vue.use(titleMixin);
 Vue.use(breadcrumbMixin);
 Vue.use(Antd);
 Vue.use(TabMenu);
+Vue.use($event);
 
 /* eslint-disable no-new */
 new Vue({

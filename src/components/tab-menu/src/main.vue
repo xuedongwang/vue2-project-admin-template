@@ -47,7 +47,7 @@ export default {
       transition: color .3s, border-color .3s;
       box-sizing: border-box;
       &--active {
-        border-left-color: #25b864;
+        border-left-color: #1890ff;
         border-left-width: 2px;
         padding-left: 23px;
         font-weight: 500;
