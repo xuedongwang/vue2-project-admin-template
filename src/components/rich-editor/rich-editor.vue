@@ -1,12 +1,12 @@
 <template>
-  <div class="rich-editor">
-    <div class="rich-editor-inner">
-      <div class="rich-editor-inner-head">
+  <div class="rich-editor-paper">
+    <div class="rich-editor-paper-inner">
+      <div class="rich-editor-paper-inner-head">
         <input v-model="title" type="text" class="title-input" ref="titleInputRef" placeholder="请输入标题">
       </div>
-      <div class="rich-editor-inner-body">
+      <div class="rich-editor-paper-inner-body">
         <editor-content
-          class="rich-editor-main"
+          class="rich-editor-paper-main"
           :editor="editor"
         >
         </editor-content>
@@ -16,26 +16,24 @@
 </template>
 
 <script>
-import { Editor, EditorContent } from '@tiptap/vue-2';
-import StarterKit from '@tiptap/starter-kit';
+import { EditorContent } from '@tiptap/vue-2';
 export default {
+  props: {
+    editor: {
+      type: Object,
+      default: null
+    }
+  },
   components: {
     EditorContent
   },
   data () {
     return {
-      editor: null,
       title: ''
     };
   },
 
   mounted () {
-    this.editor = new Editor({
-      content: '<p>I’m running tiptap with Vue.js. 🎉</p>',
-      extensions: [
-        StarterKit
-      ]
-    });
     this.$refs.titleInputRef && this.$refs.titleInputRef.focus();
     console.log(this.editor);
   },
@@ -53,7 +51,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.rich-editor {
+.rich-editor-paper {
   &-inner {
     width: 790px;
     height: 1120px;

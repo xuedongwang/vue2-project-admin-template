@@ -561,6 +561,12 @@ export default {
       }
     };
   },
+  props: {
+    editor: {
+      type: Object,
+      default: null
+    }
+  },
   components: {
     SplitLine,
     'sketch-picker': Sketch
@@ -581,6 +587,22 @@ export default {
     handleSetTitleType (type) {
       this.currentTitleType = type.name;
       console.log('set title:', type);
+      switch(type.name) {
+        case '标题1':
+          this.$emit('on-set-text-type', this.editor.chain().focus().toggleHeading({ level: 1 }).run);
+        case '标题2':
+          this.$emit('on-set-text-type', this.editor.chain().focus().toggleHeading({ level: 2 }).run);
+        case '标题3':
+          this.$emit('on-set-text-type', this.editor.chain().focus().toggleHeading({ level: 3 }).run);
+        case '标题4':
+          this.$emit('on-set-text-type', this.editor.chain().focus().toggleHeading({ level: 4 }).run);
+        case '标题5':
+          this.$emit('on-set-text-type', this.editor.chain().focus().toggleHeading({ level: 5 }).run);
+        case '标题6':
+          this.$emit('on-set-text-type', this.editor.chain().focus().toggleHeading({ level: 6 }).run);
+        default:
+          this.$emit('on-set-text-type', this.editor.chain().focus().setParagraph().run);
+      }
     },
     handleSetFontFamily (type) {
       this.currentFontFamily = type.name;
@@ -619,6 +641,7 @@ export default {
   display: flex;
   align-items: center;
   justify-content: center;
+  flex-wrap: wrap;
   padding: 8px 0;
   color: rgba(0, 0,0,.8);
   border-top: 1px solid rgba(0, 0, 0, .04);

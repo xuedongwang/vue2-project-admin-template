@@ -1,257 +1,183 @@
 export const fontSize = {
-  default: '小初',
+  default: '16px',
   list: [
-    { name: '初号', size: '56px' },
-    { name: '小初', size: '48px' },
-    { name: '一号', size: '34.7px' },
-    { name: '小一', size: '32px' },
-    { name: '二号', size: '29.3px' },
-    { name: '小二', size: '24px' },
-    { name: '三号', size: '21.3px' },
-    { name: '小三', size: '20px' },
-    { name: '四号', size: '18.7px' },
-    { name: '小四', size: '16px' },
-    { name: '五号', size: '14px' },
-    { name: '小五', size: '12px' },
-    { name: '12', size: '12px' },
-    { name: '14', size: '14px' },
-    { name: '16', size: '16px' },
-    { name: '18', size: '18px' },
-    { name: '20', size: '20px' },
-    { name: '22', size: '22px' },
-    { name: '24', size: '24px' },
-    { name: '26', size: '26px' },
-    { name: '28', size: '28px' },
-    { name: '36', size: '36px' },
-    { name: '42', size: '42px' },
-    { name: '48', size: '48px' },
-    { name: '72', size: '72px' }
+    { name: '初号', value: '56px' },
+    { name: '小初', value: '48px' },
+    { name: '一号', value: '34.7px' },
+    { name: '小一', value: '32px' },
+    { name: '二号', value: '29.3px' },
+    { name: '小二', value: '24px' },
+    { name: '三号', value: '21.3px' },
+    { name: '小三', value: '20px' },
+    { name: '四号', value: '18.7px' },
+    { name: '小四', value: '16px' },
+    { name: '五号', value: '14px' },
+    { name: '小五', value: '12px' },
+    { name: '12', value: '12px' },
+    { name: '14', value: '14px' },
+    { name: '16', value: '16px' },
+    { name: '18', value: '18px' },
+    { name: '20', value: '20px' },
+    { name: '22', value: '22px' },
+    { name: '24', value: '24px' },
+    { name: '26', value: '26px' },
+    { name: '28', value: '28px' },
+    { name: '36', value: '36px' },
+    { name: '42', value: '42px' },
+    { name: '48', value: '48px' },
+    { name: '72', value: '72px' }
   ]
 };
 export const fontFamily = {
-  default: '默认字体',
+  default: 'Helvetica Neue, Helvetica, PingFang SC, Microsoft YaHei, Source Han Sans SC, Noto Sans CJK SC, WenQuanYi Micro Hei, sans-serif',
   list: [
     {
       name: '默认字体',
-      style: {
-        fontFamily: 'Helvetica Neue, Helvetica, PingFang SC, Microsoft YaHei, Source Han Sans SC, Noto Sans CJK SC, WenQuanYi Micro Hei, sans-serif'
-      }
+      value: 'Helvetica Neue, Helvetica, PingFang SC, Microsoft YaHei, Source Han Sans SC, Noto Sans CJK SC, WenQuanYi Micro Hei, sans-serif'
     },
     {
       name: '微软雅黑',
-      style: {
-        fontFamily: 'Microsoft YaHei, 微软雅黑, Roboto, sans-serif'
-      }
+      value: 'Microsoft YaHei, 微软雅黑, Roboto, sans-serif'
     },
     {
       name: '宋体',
-      style: {
-        fontFamily: 'SimSun, Songti SC, 宋体, sans-serif'
-      }
+      value: 'SimSun, Songti SC, 宋体, sans-serif'
     },
     {
       name: '黑体',
-      style: {
-        fontFamily: 'SimHei, Heiti SC, 黑体, sans-serif'
-      }
+      value: 'SimHei, Heiti SC, 黑体, sans-serif'
     },
     {
       name: '冬青黑简体中文',
-      style: {
-        fontFamily: 'Hiragino Sans GB, 冬青黑简体中文, sans-serif'
-      }
+      value: 'Hiragino Sans GB, 冬青黑简体中文, sans-serif'
     },
     {
       name: '苹方',
-      style: {
-        fontFamily: 'PingFang SC, 苹方, sans-serif'
-      }
+      value: 'PingFang SC, 苹方, sans-serif'
     },
     {
       name: '华文宋体',
-      style: {
-        fontFamily: 'STSong, 华文宋体, sans-serif'
-      }
+      value: 'STSong, 华文宋体, sans-serif'
     },
     {
       name: '华文仿宋',
-      style: {
-        fontFamily: 'FangSong, STFangsong, 华文仿宋, sans-serif'
-      }
+      value: 'FangSong, STFangsong, 华文仿宋, sans-serif'
     },
     {
       name: '华文楷体',
-      style: {
-        fontFamily: 'STKaiti, 华文楷体, sans-serif'
-      }
+      value: 'STKaiti, 华文楷体, sans-serif'
     },
     {
       name: 'Arial',
-      style: {
-        fontFamily: 'Arial'
-      }
+      value: 'Arial'
     },
     {
       name: 'Times New Roman',
-      style: {
-        fontFamily: 'Times New Roman'
-      }
+      value: 'Times New Roman'
     },
     {
       name: 'Calibri',
-      style: {
-        fontFamily: 'Calibri'
-      }
+      value: 'Calibri'
     },
     {
       name: 'Comic Sans MS',
-      style: {
-        fontFamily: 'Comic Sans MS'
-      }
+      value: 'Comic Sans MS'
     },
     {
       name: 'Courier New',
-      style: {
-        fontFamily: 'Courier New'
-      }
+      value: 'Courier New'
     },
     {
       name: 'Georgia',
-      style: {
-        fontFamily: 'Georgia'
-      }
+      value: 'Georgia'
     },
     {
       name: 'Microsoft Uighur',
-      style: {
-        fontFamily: 'Microsoft Uighur'
-      }
+      value: 'Microsoft Uighur'
     },
     {
       name: 'Impact',
-      style: {
-        fontFamily: 'Impact'
-      }
+      value: 'Impact'
     },
     {
       name: 'Trebuchet MS',
-      style: {
-        fontFamily: 'Trebuchet MS'
-      }
+      value: 'Trebuchet MS'
     },
     {
       name: 'Verdana',
-      style: {
-        fontFamily: 'Verdana'
-      }
+      value: 'Verdana'
     },
     {
       name: 'Al Bayan',
-      style: {
-        fontFamily: 'Al Bayan'
-      }
+      value: 'Al Bayan'
     },
     {
       name: 'Al Nile',
-      style: {
-        fontFamily: 'Al Nile'
-      }
+      value: 'Al Nile'
     },
     {
       name: 'Al Tarikh',
-      style: {
-        fontFamily: 'Al Tarikh'
-      }
+      value: 'Al Tarikh'
     },
     {
       name: 'American Typewriter',
-      style: {
-        fontFamily: 'American Typewriter'
-      }
+      value: 'American Typewriter'
     },
     {
       name: 'Andale Mono',
-      style: {
-        fontFamily: 'Andale Mono'
-      }
+      value: 'Andale Mono'
     },
     {
       name: 'Arial Black',
-      style: {
-        fontFamily: 'Arial Black'
-      }
+      value: 'Arial Black'
     },
     {
       name: 'Arial Hebrew',
-      style: {
-        fontFamily: 'Arial Hebrew'
-      }
+      value: 'Arial Hebrew'
     },
     {
       name: 'Arial Hebrew Scholar',
-      style: {
-        fontFamily: 'Arial Hebrew Scholar'
-      }
+      value: 'Arial Hebrew Scholar'
     },
     {
       name: 'Arial Narrow',
-      style: {
-        fontFamily: 'Arial Narrow'
-      }
+      value: 'Arial Narrow'
     },
     {
       name: 'Arial Rounded MT Bold',
-      style: {
-        fontFamily: 'Arial Rounded MT Bold'
-      }
+      value: 'Arial Rounded MT Bold'
     },
     {
       name: 'Arial Unicode MS',
-      style: {
-        fontFamily: 'Arial Unicode MS'
-      }
+      value: 'Arial Unicode MS'
     },
     {
       name: 'Ayuthaya',
-      style: {
-        fontFamily: 'Ayuthaya'
-      }
+      value: 'Ayuthaya'
     },
     {
       name: 'Bodoni',
-      style: {
-        fontFamily: 'Bodoni'
-      }
+      value: 'Bodoni'
     },
     {
       name: 'Chalkboard SE',
-      style: {
-        fontFamily: 'Chalkboard SE'
-      }
+      value: 'Chalkboard SE'
     },
     {
       name: 'Chalkduster',
-      style: {
-        fontFamily: 'Chalkduster'
-      }
+      value: 'Chalkduster'
     },
     {
       name: 'DIN Alternate',
-      style: {
-        fontFamily: 'DIN Alternate'
-      }
+      value: 'DIN Alternate'
     },
     {
       name: 'Monaco',
-      style: {
-        fontFamily: 'Monaco'
-      }
+      value: 'Monaco'
     },
     {
       name: 'Phosphate',
-      style: {
-        fontFamily: 'Phosphate'
-      }
+      value: 'Phosphate'
     }
   ]
 };
@@ -260,7 +186,7 @@ export const titleType = {
   list: [
     {
       name: '正文',
-      ontStyle: {
+      fontStyle: {
         fontSize: '14px',
         fontWeight: 'normal'
       }

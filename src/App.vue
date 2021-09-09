@@ -21,6 +21,9 @@ export default {
 };
 </script>
 
-<style>
-
+<style lang="scss" scoped>
+.app {
+  min-width: 1200px;
+  overflow: hidden;
+}
 </style>
