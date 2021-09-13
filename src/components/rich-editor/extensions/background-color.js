@@ -1,14 +1,14 @@
-import { Extension } from '@tiptap/core'
-import '@tiptap/extension-text-style'
+import { Extension } from '@tiptap/core';
+import '@tiptap/extension-text-style';
 
 export default Extension.create({
   name: 'backgroundColor',
 
   defaultOptions: {
-    types: ['textStyle'],
+    types: ['textStyle']
   },
 
-  addGlobalAttributes() {
+  addGlobalAttributes () {
     return [
       {
         types: this.options.types,
@@ -18,32 +18,32 @@ export default Extension.create({
             parseHTML: element => element.style.backgroundColor.replace(/['"]+/g, ''),
             renderHTML: attributes => {
               if (!attributes.backgroundColor) {
-                return {}
+                return {};
               }
 
               return {
-                style: `background-color: ${attributes.backgroundColor}`,
-              }
-            },
-          },
-        },
-      },
-    ]
+                style: `background-color: ${attributes.backgroundColor}`
+              };
+            }
+          }
+        }
+      }
+    ];
   },
 
-  addCommands() {
+  addCommands () {
     return {
       setBackgroundColor: backgroundColor => ({ chain }) => {
         return chain()
           .setMark('textStyle', { backgroundColor })
-          .run()
+          .run();
       },
       unsetBackgroundColor: () => ({ chain }) => {
         return chain()
           .setMark('textStyle', { backgroundColor: null })
           .removeEmptyTextStyle()
-          .run()
-      },
-    }
-  },
-})
+          .run();
+      }
+    };
+  }
+});

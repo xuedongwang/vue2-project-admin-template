@@ -234,7 +234,7 @@
               xmlns="http://www.w3.org/2000/svg" width="16" height="16">
               <path d="M12.5 3l1.5.944L5.671 13l-.885-.957L2 9l1.5-1 2.215 2.22z" fill="#1e6fff" fill-rule="evenodd"/>
             </svg>
-            <span class="text">{{ item.name }}</span>
+            <span class="text" :style="{fontFamily: item.value}">{{ item.name }}</span>
           </a-menu-item>
         </a-menu>
       </a-dropdown>
@@ -532,12 +532,15 @@
     <div class="rich-editor-paper">
       <div class="rich-editor-paper-inner">
         <div class="rich-editor-paper-inner-head">
-          <input v-model="title" type="text" class="title-input" ref="titleInputRef" placeholder="请输入标题">
+          <input :value="title" @input="e => $emit('update:title', e.target.value)" type="text" class="title-input" ref="titleInputRef" placeholder="请输入标题">
         </div>
         <div class="rich-editor-paper-inner-body">
           <editor-content
             class="rich-editor-paper-main"
+            :autocapitalize="autocapitalize"
+            :spellcheck="spellcheck"
             :editor="editor"
+            :style="{'caret-color': this.currentFontColor}"
           >
           </editor-content>
         </div>
@@ -549,20 +552,34 @@
 <script>
 import { Editor, EditorContent } from '@tiptap/vue-2';
 import Underline from '@tiptap/extension-underline';
-import TextStyle from '@tiptap/extension-text-style'
-import FontFamily from '@tiptap/extension-font-family'
-import Color from '@tiptap/extension-color'
+import TextStyle from '@tiptap/extension-text-style';
+import FontFamily from '@tiptap/extension-font-family';
+import { Color } from '@tiptap/extension-color';
 import StarterKit from '@tiptap/starter-kit';
-import TaskList from '@tiptap/extension-task-list'
-import TaskItem from '@tiptap/extension-task-item'
-import TextAlign from '@tiptap/extension-text-align'
+import Document from '@tiptap/extension-document'
+import TaskList from '@tiptap/extension-task-list';
+import TaskItem from '@tiptap/extension-task-item';
+import TextAlign from '@tiptap/extension-text-align';
 import { Sketch as SketchPicker } from 'vue-color';
 import BackgroundColor from './extensions/background-color';
+import Paragraph from '@tiptap/extension-paragraph'
 import FontSize from './extensions/font-size';
 import SplitLine from './split-line';
+import Text from '@tiptap/extension-text'
+import Placeholder from '@tiptap/extension-placeholder';
 import { fontSize, titleType, fontFamily } from './config';
 export default {
-  data() {
+  props: {
+    title: {
+      type: String,
+      default: ''
+    },
+    value: {
+      type: String,
+      default: ''
+    }
+  },
+  data () {
     return {
       editor: null,
       fontSize,
@@ -582,6 +599,7 @@ export default {
         column: 8
       },
       markdown: true,
+      autocapitalize: true,
       spellcheck: true,
       // table
       mouseenter: false,
@@ -589,7 +607,7 @@ export default {
         row: 0,
         column: 0
       },
-      title: ''
+      placeholder: '请输入文章内容...',
     };
   },
   components: {
@@ -598,37 +616,37 @@ export default {
     SketchPicker
   },
   computed: {
-    currentFontSize() {
-      const fontSize = this.editor.getAttributes('textStyle').fontSize ?? this.fontSize.default;
+    currentFontSize () {
+      const fontSize = this.editor.getAttributes('textStyle').fontSize || this.fontSize.default;
       return this.fontSize.list.find(item => item.value === fontSize).name;
     },
-    currentFontFamily() {
-      const fontFamily = this.editor.getAttributes('textStyle').fontFamily ?? this.fontFamily.default;
-      console.log('fontFamily', this.editor.getAttributes('textStyle').vaue, fontFamily, this.fontFamily.list.find(item => item.value === fontFamily).name)
+    currentFontFamily () {
+      const fontFamily = this.editor.getAttributes('textStyle').fontFamily || this.fontFamily.default;
       return this.fontFamily.list.find(item => item.value === fontFamily).name;
     },
-    currentFontColor() {
-      return this.editor.getAttributes('textStyle').color ?? 'rgba(1,1,1,1)';
+    currentFontColor () {
+      return this.editor.getAttributes('textStyle').color || 'rgba(1,1,1,1)';
     },
-    currentBackgroundColor() {
-      return this.editor.getAttributes('textStyle').backgroundColor ?? 'rgba(0,0,0,0)';
+    currentBackgroundColor () {
+      return this.editor.getAttributes('textStyle').backgroundColor || 'rgba(0,0,0,0)';
     },
-    currentTitleType() {
+    currentTitleType () {
       if (this.editor.isActive('heading', { level: 1 })) {
         return '标题1';
-      } else if(this.editor.isActive('heading', { level: 2 })) {
+      } else if (this.editor.isActive('heading', { level: 2 })) {
         return '标题2';
-      } else if(this.editor.isActive('heading', { level: 3 })) {
+      } else if (this.editor.isActive('heading', { level: 3 })) {
         return '标题3';
-      } else if(this.editor.isActive('heading', { level: 4 })) {
+      } else if (this.editor.isActive('heading', { level: 4 })) {
         return '标题4';
-      } else if(this.editor.isActive('heading', { level: 5 })) {
+      } else if (this.editor.isActive('heading', { level: 5 })) {
         return '标题5';
-      } else if(this.editor.isActive('heading', { level: 6 })) {
+      } else if (this.editor.isActive('heading', { level: 6 })) {
         return '标题6';
-      } else if(this.editor.isActive('paragraph')) {
+      } else if (this.editor.isActive('paragraph')) {
         return '正文';
       }
+      return '正文';
     },
     hasSelectedTableCell () {
       return this.table.row > 0 && this.table.column > 0;
@@ -636,21 +654,17 @@ export default {
   },
   watch: {
     editor: {
-      handler(newValue) {
+      handler (newValue) {
         console.log('editor:', newValue);
-      },
+      }
       // deep: true
     }
   },
-  mounted() {
+  mounted () {
     this.$refs.titleInputRef && this.$refs.titleInputRef.focus();
     this.initEditor();
   },
   methods: {
-    rgbaString2obj(color) {
-      // const 
-      // return 
-    },
     handleFocus () {
       if (this.editor.isFocused) return;
       this.editor && this.editor.commands.focus('end');
@@ -658,7 +672,7 @@ export default {
     handleSetTextAlign (type) {
       this.textAlign = type;
       console.log('textAlign:', type);
-      this.editor.chain().focus().setTextAlign(type).run()
+      this.editor.chain().focus().setTextAlign(type).run();
     },
     handleInsert (type) {
       console.log('insert:', type);
@@ -670,42 +684,42 @@ export default {
     },
     handleSetTitleType (type) {
       console.log('set title:', type);
-      switch(type.name) {
+      switch (type.name) {
         case '标题1':
           this.editor.chain().focus().toggleHeading({ level: 1 }).run();
-          console.log(type.name)
+          console.log(type.name);
           break;
         case '标题2':
           this.editor.chain().focus().toggleHeading({ level: 2 }).run();
-          console.log(type.name)
+          console.log(type.name);
           break;
         case '标题3':
           this.editor.chain().focus().toggleHeading({ level: 3 }).run();
-          console.log(type.name)
+          console.log(type.name);
           break;
         case '标题4':
           this.editor.chain().focus().toggleHeading({ level: 4 }).run();
-          console.log(type.name)
+          console.log(type.name);
           break;
         case '标题5':
           this.editor.chain().focus().toggleHeading({ level: 5 }).run();
-          console.log(type.name)
+          console.log(type.name);
           break;
         case '标题6':
           this.editor.chain().focus().toggleHeading({ level: 6 }).run();
-          console.log(type.name)
+          console.log(type.name);
           break;
         default:
           this.editor.chain().focus().setParagraph().run();
       }
     },
-    handleSetFontBackgroundColor({ rgba }) {
+    handleSetFontBackgroundColor ({ rgba }) {
       console.log(this.editor.chain().focus());
       const { r, g, b, a } = rgba;
       const rgbaColor = `rgb(${r},${g},${b},${a})`;
       this.editor.chain().focus().setBackgroundColor(rgbaColor).run();
     },
-    handleSetFontColor({ rgba }) {
+    handleSetFontColor ({ rgba }) {
       const { r, g, b, a } = rgba;
       const rgbaColor = `rgb(${r},${g},${b},${a})`;
       this.editor.chain().focus().setColor(rgbaColor).run();
@@ -738,25 +752,34 @@ export default {
         }
       }
     },
-    handleSetTextType(handler) {
-      handler();
-    },
-    initEditor() {
+    initEditor () {
+      const vm = this;
       this.editor = new Editor({
-        content: '<p>I’m running tiptap with Vue.js. 🎉</p>',
+        content: vm.value,
+        onUpdate () {
+          const html = this.getHTML();
+          console.log(html);
+          vm.$emit('input', html);
+        },
         extensions: [
           StarterKit,
           TaskList,
           TaskItem,
           TextAlign.configure({
-            types: ['heading', 'paragraph'],
+            types: ['heading', 'paragraph']
           }),
+          Text,
+          Paragraph,
+          Document,
           Underline,
           TextStyle,
           Color,
           BackgroundColor,
           FontFamily,
-          FontSize
+          FontSize,
+          Placeholder.configure({
+            placeholder: vm.placeholder
+          })
         ]
       });
     }
@@ -799,11 +822,17 @@ export default {
     height: 100%;
     /deep/ {
       .ProseMirror {
-        caret-color: #1890ff;
         padding: 0 90px 20px;
         height: 100%;
         &.ProseMirror-focused {
           outline: none;
+        }
+        p.is-editor-empty:first-child::before {
+          content: attr(data-placeholder);
+          float: left;
+          color: #ced4da;
+          pointer-events: none;
+          height: 0;
         }
       }
       ul[data-type="taskList"] {

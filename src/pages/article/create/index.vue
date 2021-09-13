@@ -22,7 +22,10 @@
     </a-row>
     <a-row>
       <a-col :span="24">
-        <rich-editor></rich-editor>
+        <rich-editor
+          :title.sync="form.title"
+          v-model="form.content"
+        ></rich-editor>
       </a-col>
     </a-row>
     <a-drawer
@@ -92,6 +95,20 @@
 
 <script>
 import RichEditor from '@/components/rich-editor';
+const formRules = {
+  title: [
+    { required: true, message: '请输入文章标题', trigger: 'blur' },
+    { min: 1, max: 50, message: '文章标题长度为1-50', trigger: 'blur' }
+  ],
+  description: [
+    { min: 0, max: 500, message: '文章描述长度最长为500', trigger: 'blur' }
+  ],
+  category: [{ required: true, message: '每篇文章必须有一个分类', trigger: 'blur' }],
+  tags: [{ required: true, message: '每篇文章至少有一个标签', trigger: 'change' }],
+  timedReleaseDate: [{ required: true, message: '定时发送时，定时发送的时间必选', trigger: 'change' }],
+  originalAuthor: [{ required: true, message: '非原创文章，原创作者必填', trigger: 'change' }],
+  originalLink: [{ required: true, message: '非原创文章，原创链接必填', trigger: 'change' }]
+};
 const DEFAULT_TAGS = [
   {
     name: 'HTML',
@@ -115,13 +132,24 @@ export default {
       return this.$route.path.includes('/article/edit');
     }
   },
+  watch: {
+    form: {
+      handler ({ title, content }) {
+        console.log(content);
+        localStorage.setItem('content', content);
+        localStorage.setItem('title', title);
+      },
+      deep: true
+    }
+  },
   data () {
     return {
       drawVisiable: false,
       defaultTags: DEFAULT_TAGS,
       userCategories: DEFAULT_TAGS,
       form: {
-        title: '',
+        title: localStorage.getItem('title') ?? '',
+        content: localStorage.getItem('content') ?? '',
         description: '',
         category: '',
         tags: [],
@@ -132,20 +160,7 @@ export default {
         originalAuthor: '',
         originalLink: ''
       },
-      rules: {
-        title: [
-          { required: true, message: '请输入文章标题', trigger: 'blur' },
-          { min: 1, max: 50, message: '文章标题长度为1-50', trigger: 'blur' }
-        ],
-        description: [
-          { min: 0, max: 500, message: '文章描述长度最长为500', trigger: 'blur' }
-        ],
-        category: [{ required: true, message: '每篇文章必须有一个分类', trigger: 'blur' }],
-        tags: [{ required: true, message: '每篇文章至少有一个标签', trigger: 'change' }],
-        timedReleaseDate: [{ required: true, message: '定时发送时，定时发送的时间必选', trigger: 'change' }],
-        originalAuthor: [{ required: true, message: '非原创文章，原创作者必填', trigger: 'change' }],
-        originalLink: [{ required: true, message: '非原创文章，原创链接必填', trigger: 'change' }]
-      },
+      rules: formRules,
       formItemLayout: {
         labelCol: { span: 2 },
         wrapperCol: { span: 22 }
@@ -156,7 +171,9 @@ export default {
       }
     };
   },
-  title: 'admin',
+  title () {
+    return '';
+  },
   methods: {
     handleDrawerClose () {
       this.drawVisiable = false;
