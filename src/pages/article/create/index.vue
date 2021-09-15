@@ -74,6 +74,9 @@
         <a-form-model-item label="是否原创">
           <a-switch v-model="form.isOriginal" />
         </a-form-model-item>
+        <a-form-model-item label="允许评论">
+          <a-switch v-model="form.isAllowComment" />
+        </a-form-model-item>
         <template v-if="!form.isOriginal">
           <a-form-model-item label="原创作者" prop="originalAuthor">
             <a-input v-model="form.originalAuthor"/>
@@ -158,7 +161,8 @@ export default {
         isPrivate: false,
         isOriginal: true,
         originalAuthor: '',
-        originalLink: ''
+        originalLink: '',
+        isAllowComment: true
       },
       rules: formRules,
       formItemLayout: {
