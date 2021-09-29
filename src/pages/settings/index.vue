@@ -5,24 +5,7 @@
         <tab-menu @input="handleInput" :value="value" :tabs="tabs"></tab-menu>
       </a-col>
       <a-col style="width:calc(100% - 20px - 300px)">
-        <a-card class="card" title="个人信息" v-if="value === 'profile'">
-          <div class="card-body">
-            <a-form-model layout="vertical" :model="profileForm">
-              <a-form-model-item label="昵称">
-                <a-input v-model="profileForm.nickname"/>
-              </a-form-model-item>
-              <a-form-model-item label="简介">
-                <a-input type="textarea" :autosize="{ minRows: 3, maxRows: 6 }" v-model="profileForm.description"/>
-              </a-form-model-item>
-              <a-form-model-item label="地址">
-                <a-input v-model="profileForm.address"/>
-              </a-form-model-item>
-              <a-form-model-item>
-                <a-button type="primary">更新信息</a-button>
-              </a-form-model-item>
-            </a-form-model>
-          </div>
-        </a-card>
+        <person-info v-if="value==='profile'"></person-info>
         <a-card class="card" title="账户管理" v-else-if="value === 'account'">
           <div class="card-body">
            account
@@ -39,31 +22,13 @@
 </template>
 
 <script>
-const data = [
-  {
-    title: 'Ant Design Title 1'
-  },
-  {
-    title: 'Ant Design Title 2'
-  },
-  {
-    title: 'Ant Design Title 3'
-  },
-  {
-    title: 'Ant Design Title 4'
-  }
-];
+import PersonInfo from './components/person-info.vue';
 export default {
+  components: {
+    PersonInfo
+  },
   data () {
     return {
-      profileForm: {
-        nickname: '',
-        description: '',
-        address: ''
-      },
-      hasData: true,
-      loadMoreLoading: false,
-      data,
       value: '',
       tabs: [
         {
@@ -96,16 +61,6 @@ export default {
         }
       });
       this.value = value;
-    },
-    onLoadMore () {
-      this.loadMoreLoading = true;
-      setTimeout(() => {
-        this.data.push(...data);
-        this.loadMoreLoading = false;
-      }, 2000);
-    },
-    onChange (e) {
-      console.log(e.target.value);
     }
   }
 };

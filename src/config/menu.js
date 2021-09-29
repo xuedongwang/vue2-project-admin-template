@@ -37,10 +37,9 @@ export default {
       title: '留言管理'
     },
     {
-      key: 'folder-open',
+      key: '/source',
       icon: 'folder-open',
       title: '资源管理',
-      disabled: true
     },
     {
       key: '/settings/profile',

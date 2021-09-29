@@ -1,112 +1,159 @@
 <template>
-  <div class="message">
-    <a-row type="flex" justify="space-between">
-      <a-col style="width:300px;">
-        <tab-menu v-model="value" :tabs="tabs"></tab-menu>
-      </a-col>
-      <a-col style="width:calc(100% - 20px - 300px)">
+  <div class="message" v-if="message">
+    <a-row>
+      <a-col>
         <a-card class="card">
           <div class="card-head">
             <div class="head-left head-inner">
               <div class="head-inner-item head-inner-item--active">
-                <span style="margin-right:5px;">未读消息</span>
-                <a-badge count="25" /></div>
-              <div class="head-inner-item">已读消息</div>
-            </div>
-            <div class="head-right head-inner">
-              <div class="head-inner-item">
-                <a-icon type="setting" />
-                <span style="margin-left:5px;">消息设置</span>
-              </div>
-              <div class="head-inner-item">全部删除</div>
+                <span style="margin-right:5px;">用户留言</span>
+                <a-badge :count="message.total" /></div>
             </div>
           </div>
           <div class="card-body">
-            <a-list item-layout="horizontal" :data-source="data">
-              <a-list-item slot="renderItem" slot-scope="item">
-                <a-list-item-meta
-                  description="Ant Design, a design language for background applications, is refined by Ant UED Team"
-                >
-                  <a slot="title" href="https://www.antdv.com/">{{ item.title }}</a>
-                  <a-avatar
-                    slot="avatar"
-                    src="https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png"
-                  />
-                </a-list-item-meta>
-              </a-list-item>
-              <div
-                v-if="hasData"
-                slot="loadMore"
-                :style="{ textAlign: 'center', marginTop: '12px' }"
-              >
-                <template v-if="loadMoreLoading">
-                  <a-skeleton avatar :paragraph="{ rows: 1 }" />
-                  <a-skeleton avatar :paragraph="{ rows: 1 }" />
-                  <a-skeleton avatar :paragraph="{ rows: 1 }" />
-                </template>
-                <a-button v-else @click="onLoadMore">加载更多</a-button>
-              </div>
-            </a-list>
+            <a-comment v-for="message of message.list" :key="message.id">
+              <template slot="actions">
+                <span key="comment-basic-like">
+                  <a-tooltip title="Like">
+                    <a-icon type="like" :theme="action === 'liked' ? 'filled' : 'outlined'" />
+                  </a-tooltip>
+                  <span style="padding-left: '8px';cursor: 'auto'">
+                    {{ message.likes }}
+                  </span>
+                </span>
+                <span key="comment-basic-dislike">
+                  <a-tooltip title="Dislike">
+                    <a-icon
+                      type="dislike"
+                      :theme="action === 'disliked' ? 'filled' : 'outlined'"
+                    />
+                  </a-tooltip>
+                  <span style="padding-left: '8px';cursor: 'auto'">
+                    {{ message.dislikes }}
+                  </span>
+                </span>
+                <span key="comment-basic-reply-to" @click="handleReplay(message)">回复</span>
+              </template>
+              <a slot="author">{{ message.name }}</a>
+              <a-avatar
+                slot="avatar"
+                :src="message.avatar"
+                alt="Han Solo"
+              />
+              <p slot="content">{{ message.message }}</p>
+              <a-tooltip slot="datetime" :title="message.createdAt">
+                <span>{{ message.createdAt }}</span>
+              </a-tooltip>
+            </a-comment>
           </div>
         </a-card>
       </a-col>
+      
     </a-row>
+    <a-modal
+      wrapClassName="replay-message-dialog"
+      :width="700"
+      title="回复评论"
+      :visible="visible"
+      v-if="currentMessage"
+      :confirm-loading="confirmLoading"
+      @ok="handleOk"
+      @cancel="visible=false"
+    >
+    <div class="user-comment">{{ currentMessage.name }}在《{{ currentMessage.from }}》评论说：{{ currentMessage.message }}</div>
+      <a-comment>
+        <a-avatar
+          slot="avatar"
+          :src="user.avatar"
+          :alt="user.name"
+        />
+        <div slot="content">
+          <a-form-item>
+            <a-textarea :rows="4" v-model="replayContent" />
+          </a-form-item>
+          <a-form-item>
+            <a-button html-type="submit" :loading="replaying" type="primary" @click="handleSubmit">
+              回复
+            </a-button>
+          </a-form-item>
+        </div>
+      </a-comment>
+    </a-modal>
   </div>
 </template>
 
 <script>
-const data = [
-  {
-    title: 'Ant Design Title 1'
-  },
-  {
-    title: 'Ant Design Title 2'
-  },
-  {
-    title: 'Ant Design Title 3'
-  },
-  {
-    title: 'Ant Design Title 4'
-  }
-];
 export default {
   data () {
     return {
       hasData: true,
       loadMoreLoading: false,
-      data,
-      value: '1',
-      tabs: [
-        {
-          text: '全部消息',
-          id: '1'
-        },
-        {
-          text: '评论',
-          id: '2'
-        },
-        {
-          text: '系统通知',
-          id: '3'
-        }
-      ]
+      confirmLoading: false,
+      visible: false,
+      currentMessage: null,
+      data: [],
+      ModalText: 'dasdasd',
+      message: null,
+      action: null,
+      replayContent: '',
+      replaying: false
     };
   },
+  computed: {
+    user() {
+      return this.$store.state.user.info || {};
+    }
+  },
+  mounted() {
+    this.fetchComment();
+  },
   methods: {
+    handleSubmit() {
+      this.replaying = true;
+      setTimeout(() => {
+        this.replaying = false;
+        this.visible = false;
+      }, 1000);
+      console.log(this.replayContent);
+    },
+    fetchComment() {
+      $http.get('/message/list')
+        .then(res => {
+          this.message = res.data;
+        })
+        .catch(err => {
+          throw err;
+        });
+    },
+    handleOk() {
+      this.confirmLoading = true;
+      setTimeout(() => {
+        this.confirmLoading = false;
+        this.visible = false;
+      }, 1000);
+    },
+    handleCancel() {},
+    handleReplay(user) {
+      this.currentMessage = user;
+      this.visible = true;
+    },
     onLoadMore () {
       this.loadMoreLoading = true;
       setTimeout(() => {
-        this.data.push(...data);
+        this.message.list.push(...this.message.list);
         this.loadMoreLoading = false;
       }, 2000);
-    },
-    onChange (e) {
-      console.log(e.target.value);
     }
   }
 };
 </script>
-
+<style lang="scss">
+.replay-message-dialog {
+  .ant-modal-footer {
+    display: none;
+  }
+}
+</style>
 <style lang="scss" scoped>
 .message {
   .card {

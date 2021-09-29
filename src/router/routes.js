@@ -3,7 +3,8 @@ const routes = [
     path: '/',
     component: () => import('../pages/home'),
     meta: {
-      layout: 'CommonLayout'
+      layout: 'CommonLayout',
+      needLogin: true
     }
   },
   {
@@ -11,7 +12,8 @@ const routes = [
     path: '/article',
     component: () => import('../pages/article/manage'),
     meta: {
-      layout: 'CommonLayout'
+      layout: 'CommonLayout',
+      needLogin: true
     }
   },
   {
@@ -19,7 +21,17 @@ const routes = [
     path: '/message',
     component: () => import('../pages/message'),
     meta: {
-      layout: 'CommonLayout'
+      layout: 'CommonLayout',
+      needLogin: true
+    }
+  },
+  {
+    name: 'source',
+    path: '/source',
+    component: () => import('../pages/source/manage'),
+    meta: {
+      layout: 'CommonLayout',
+      needLogin: true
     }
   },
   {
@@ -27,7 +39,8 @@ const routes = [
     path: '/settings/:type',
     component: () => import('../pages/settings'),
     meta: {
-      layout: 'CommonLayout'
+      layout: 'CommonLayout',
+      needLogin: true
     }
   },
   {
@@ -44,7 +57,8 @@ const routes = [
     path: '/category',
     component: () => import('../pages/category/manage'),
     meta: {
-      layout: 'CommonLayout'
+      layout: 'CommonLayout',
+      needLogin: true
     }
   },
   {
@@ -53,7 +67,8 @@ const routes = [
     alias: '/category/edit/:id',
     component: () => import('../pages/category/create'),
     meta: {
-      layout: 'CommonLayout'
+      layout: 'CommonLayout',
+      needLogin: true
     }
   },
   {

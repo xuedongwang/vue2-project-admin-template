@@ -27,12 +27,9 @@
           />
         </div>
         <div class="header-right">
-          <span class="username">我是xxx</span>
-          <a-tag color="red">超级管理员</a-tag>
-          <!-- <a-tag color="green">管理员</a-tag>
-          <a-tag color="blue">普通用户</a-tag> -->
+          <span class="username">{{ user.name }}</span>
           <a-dropdown :trigger="['click']">
-            <a-avatar size="large" icon="user" class="pointer" />
+            <a-avatar size="large" :src="user.avatar" icon="user" class="pointer" />
             <a-menu slot="overlay">
               <template v-for="(item, index) of avatarDropDownMenuList">
                 <a-menu-item :key="index" v-if="item.type === 'link'">
@@ -72,10 +69,9 @@ export default {
       avatarDropDownMenuList: [
         {
           title: '个人资料',
-          type: 'link',
-          props: {
-            href: '/profiles',
-            target: '__blank'
+          type: 'text',
+          handler: () => {
+            this.$router.push('/settings/profile');
           }
         },
         {
@@ -92,6 +88,9 @@ export default {
     };
   },
   computed: {
+    user() {
+      return this.$store.state.user.info || {};
+    },
     breadcrumb () {
       return this.$store.state.breadcrumb;
     },

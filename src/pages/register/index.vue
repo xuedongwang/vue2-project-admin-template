@@ -35,9 +35,9 @@ export default {
     }
     return {
       form: {
-        account: '',
-        password: '',
-        confirmPassword: ''
+        account: 'root',
+        password: 'root',
+        confirmPassword: 'root'
       },
       registerLoading: false,
       formLayout: 'horizontal',
@@ -66,12 +66,61 @@ export default {
     };
   },
   methods: {
+    loginAccount(data) {
+      const hide = this.$message.loading({
+        content: '正在登录...',
+        duration: 0,
+        key: 'key'
+      });
+      $http.post('/user/login', data)
+        .then(() => {
+          hide()
+          this.$message.success({
+            content: '登录成功',
+            key: 'key'
+          });
+        })
+        .catch(err => {
+          hide()
+          this.$message.error({
+            content: '登录失败',
+            key: 'key'
+          });
+          throw err;
+        });
+    },
+    registerAccount(data) {
+      this.registerLoading = true;
+      const hide = this.$message.loading({
+        content: '正在注册...',
+        duration: 0,
+        key: 'key'
+      });
+      $http.post('/user/register', data)
+        .then(() => {
+          this.registerLoading = false;
+          hide()
+          this.$message.success({
+            content: '注册成功',
+            key: 'key'
+          });
+          this.loginAccount(data);
+        })
+        .catch(err => {
+          this.$message.error({
+            content: '注册失败',
+            key: 'key'
+          });
+          this.registerLoading = false;
+          hide()
+          throw err;
+        });
+    },
     handleRegister () {
       this.$refs.registerForm.validate(valid => {
         if (valid) {
-          console.log(this.form);
+          this.registerAccount(this.form);
         } else {
-          console.log('error submit!!');
           return false;
         }
       });
