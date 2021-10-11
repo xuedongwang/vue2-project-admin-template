@@ -1,55 +1,72 @@
 <template>
   <div class="message" v-if="message">
-    <a-row>
-      <a-col>
-        <a-card class="card">
-          <div class="card-head">
-            <div class="head-left head-inner">
-              <div class="head-inner-item head-inner-item--active">
-                <span style="margin-right:5px;">用户留言</span>
-                <a-badge :count="message.total" /></div>
+    <a-space direction="vertical" style="width:100%;">
+      <a-row>
+        <a-col :span="24">
+          <a-card title="文章管理" :bordered="false">
+            <!-- 搜索 -->
+            <a-radio-group v-model="value" @change="handleSearch">
+              <a-radio-button value="1">全部 (12)</a-radio-button>
+              <a-radio-button value="2">我的 (2)</a-radio-button>
+              <a-radio-button value="3">待审 (3)</a-radio-button>
+              <a-radio-button value="4">已批准 (45)</a-radio-button>
+              <a-radio-button value="5">回收站 (34)</a-radio-button>
+            </a-radio-group>
+            <!-- 表格 -->
+          </a-card>
+        </a-col>
+      </a-row>
+      <a-row>
+        <a-col :span="24">
+          <a-card class="card">
+            <div class="card-head">
+              <div class="head-left head-inner">
+                <div class="head-inner-item head-inner-item--active">
+                  <span style="margin-right:5px;">用户留言</span>
+                  <a-badge :count="message.total" /></div>
+              </div>
             </div>
-          </div>
-          <div class="card-body">
-            <a-comment v-for="message of message.list" :key="message.id">
-              <template slot="actions">
-                <span key="comment-basic-like">
-                  <a-tooltip title="Like">
-                    <a-icon type="like" :theme="action === 'liked' ? 'filled' : 'outlined'" />
-                  </a-tooltip>
-                  <span style="padding-left: '8px';cursor: 'auto'">
-                    {{ message.likes }}
+            <div class="card-body">
+              <a-comment v-for="message of message.list" :key="message.id">
+                <template slot="actions">
+                  <span key="comment-basic-like">
+                    <a-tooltip title="Like">
+                      <a-icon type="like" :theme="action === 'liked' ? 'filled' : 'outlined'" />
+                    </a-tooltip>
+                    <span style="padding-left: '8px';cursor: 'auto'">
+                      {{ message.likes }}
+                    </span>
                   </span>
-                </span>
-                <span key="comment-basic-dislike">
-                  <a-tooltip title="Dislike">
-                    <a-icon
-                      type="dislike"
-                      :theme="action === 'disliked' ? 'filled' : 'outlined'"
-                    />
-                  </a-tooltip>
-                  <span style="padding-left: '8px';cursor: 'auto'">
-                    {{ message.dislikes }}
+                  <span key="comment-basic-dislike">
+                    <a-tooltip title="Dislike">
+                      <a-icon
+                        type="dislike"
+                        :theme="action === 'disliked' ? 'filled' : 'outlined'"
+                      />
+                    </a-tooltip>
+                    <span style="padding-left: '8px';cursor: 'auto'">
+                      {{ message.dislikes }}
+                    </span>
                   </span>
-                </span>
-                <span key="comment-basic-reply-to" @click="handleReplay(message)">回复</span>
-              </template>
-              <a slot="author">{{ message.name }}</a>
-              <a-avatar
-                slot="avatar"
-                :src="message.avatar"
-                alt="Han Solo"
-              />
-              <p slot="content">{{ message.message }}</p>
-              <a-tooltip slot="datetime" :title="message.createdAt">
-                <span>{{ message.createdAt }}</span>
-              </a-tooltip>
-            </a-comment>
-          </div>
-        </a-card>
-      </a-col>
-      
-    </a-row>
+                  <span key="comment-basic-reply-to" @click="handleReplay(message)">回复</span>
+                </template>
+                <a slot="author">{{ message.name }}</a>
+                <a-avatar
+                  slot="avatar"
+                  :src="message.avatar"
+                  alt="Han Solo"
+                />
+                <p slot="content">{{ message.message }}</p>
+                <a-tooltip slot="datetime" :title="message.createdAt">
+                  <span>{{ message.createdAt }}</span>
+                </a-tooltip>
+              </a-comment>
+            </div>
+          </a-card>
+        </a-col>
+        
+      </a-row>
+    </a-space>
     <a-modal
       wrapClassName="replay-message-dialog"
       :width="700"
@@ -96,7 +113,8 @@ export default {
       message: null,
       action: null,
       replayContent: '',
-      replaying: false
+      replaying: false,
+      value: '1'
     };
   },
   computed: {
@@ -108,6 +126,7 @@ export default {
     this.fetchComment();
   },
   methods: {
+    handleSearch() {},
     handleSubmit() {
       this.replaying = true;
       setTimeout(() => {
@@ -117,11 +136,21 @@ export default {
       console.log(this.replayContent);
     },
     fetchComment() {
+      const hide = this.$message.loading({
+        content: '加载中...',
+        duration: 0,
+        key: 'key'
+      });
       $http.get('/message/list')
         .then(res => {
+          hide();
           this.message = res.data;
         })
         .catch(err => {
+          this.$message.error({
+            content: '网络故障，请重试',
+            key: 'key'
+          });
           throw err;
         });
     },

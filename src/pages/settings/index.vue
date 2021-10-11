@@ -6,16 +6,9 @@
       </a-col>
       <a-col style="width:calc(100% - 20px - 300px)">
         <person-info v-if="value==='profile'"></person-info>
-        <a-card class="card" title="账户管理" v-else-if="value === 'account'">
-          <div class="card-body">
-           account
-          </div>
-        </a-card>
-        <a-card class="card" title="网站设置" v-if="value === 'site'">
-          <div class="card-body">
-           site
-          </div>
-        </a-card>
+        <account-manage v-if="value === 'account'"></account-manage>
+        <site-setting v-if="value === 'site'"></site-setting>
+        <notification-manage v-if="value === 'notification-manage'"></notification-manage>
       </a-col>
     </a-row>
   </div>
@@ -23,9 +16,15 @@
 
 <script>
 import PersonInfo from './components/person-info.vue';
+import SiteSetting from './components/site-setting.vue';
+import AccountManage from './components/account-manage.vue';
+import NotificationManage from './components/notification-manage.vue';
 export default {
   components: {
-    PersonInfo
+    PersonInfo,
+    SiteSetting,
+    AccountManage,
+    NotificationManage
   },
   data () {
     return {
@@ -42,6 +41,10 @@ export default {
         {
           text: '网站设置',
           id: 'site'
+        },
+        {
+          text: '通知管理',
+          id: 'notification-manage'
         }
       ]
     };

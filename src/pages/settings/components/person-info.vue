@@ -2,6 +2,16 @@
   <a-card class="card" title="个人信息">
     <div class="card-body">
       <a-form-model layout="vertical" :model="profileForm">
+        <a-form-model-item label="头像">
+          <a-upload
+            name="file"
+            action="https://www.mocky.io/v2/5cc8019d300000980a055e76"
+            :headers="headers"
+            @change="handleChange"
+          >
+            <a-avatar :size="64" :src="profileForm.avatar" icon="user" />
+          </a-upload>
+        </a-form-model-item>
         <a-form-model-item label="昵称">
           <a-input v-model="profileForm.name"/>
         </a-form-model-item>
@@ -29,12 +39,14 @@ export default {
         description: '',
         address: ''
       },
+      headers: {}
     }
   },
   created () {
     this.profileForm = cloneDeep(this.$store.state.user.info || {});
   },
   methods: {
+    handleChange() {},
     handleUpdateUserinfo() {
       this.$store.dispatch('user/fetchUserinfo');
     }

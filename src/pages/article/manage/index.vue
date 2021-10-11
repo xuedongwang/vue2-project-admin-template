@@ -152,7 +152,14 @@ export default {
         duration: 0,
         key: 'key'
       });
-      $http.get('/article/list')
+      const params = {
+        ...this.filterForm
+      };
+      $http.get('/article/list', {
+        params,
+        currentPage: this.pagination.current,
+        pageSize: this.pagination.pageSize
+      })
         .then(res => {
           hide();
           this.article.list = res.data.list;
