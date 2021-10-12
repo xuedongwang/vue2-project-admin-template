@@ -88,7 +88,7 @@ export default {
     };
   },
   computed: {
-    user() {
+    user () {
       return this.$store.state.user.info || {};
     },
     breadcrumb () {

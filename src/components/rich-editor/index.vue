@@ -574,10 +574,10 @@ import BackgroundColor from './extensions/background-color';
 import FontSize from './extensions/font-size';
 import SplitLine from './split-line';
 import Placeholder from '@tiptap/extension-placeholder';
-import CharacterCount from '@tiptap/extension-character-count'
-import Typography from '@tiptap/extension-typography'
-import { ColorHighlighter } from './ColorHighlighter'
-import { SmilieReplacer } from './SmilieReplacer'
+import CharacterCount from '@tiptap/extension-character-count';
+import Typography from '@tiptap/extension-typography';
+import { ColorHighlighter } from './ColorHighlighter';
+import { SmilieReplacer } from './SmilieReplacer';
 import { fontSize, titleType, fontFamily } from './config';
 export default {
   props: {
@@ -628,7 +628,7 @@ export default {
     SketchPicker
   },
   computed: {
-    wordCount() {
+    wordCount () {
       return this.editor.getCharacterCount();
     },
     currentFontSize () {
@@ -792,15 +792,15 @@ export default {
             placeholder: vm.placeholder
           }),
           CharacterCount.configure({
-            limit: this.limit,
+            limit: this.limit
           }),
           Typography,
           ColorHighlighter,
-          SmilieReplacer,
+          SmilieReplacer
         ]
       });
     },
-    handleFullScreen() {
+    handleFullScreen () {
       this.$refs.richEditorPaperRef.requestFullscreen();
     }
   },

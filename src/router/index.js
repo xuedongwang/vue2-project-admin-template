@@ -11,13 +11,13 @@ const router = new VueRouter({
 });
 
 router.beforeEach(async (to, from, next) => {
-  console.log(store)
+  console.log(store);
   if (to.meta.needLogin && !store.state.user.info) {
     await store.dispatch('user/fetchUserinfo');
     next();
   } else {
     next();
   }
-})
+});
 
 export default router;

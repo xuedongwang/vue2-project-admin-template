@@ -3,14 +3,14 @@
     <a-space direction="vertical" style="width:100%;">
       <a-row>
         <a-col :span="24">
-          <a-card title="分类管理" :bordered="false">
+          <a-card title="标签管理" :bordered="false">
             <a-button
               type="primary"
               slot="extra"
               :loading="loading"
               @click="handleCreateCategory"
             >
-              创建分类
+              创建标签
             </a-button>
             <!-- 搜索 -->
             <a-form-model layout="inline" :model="filterForm" @submit="handleSearch" @submit.native.prevent>

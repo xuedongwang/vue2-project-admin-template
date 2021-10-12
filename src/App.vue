@@ -14,10 +14,10 @@ import BlankLayout from './layouts/blank-layout.vue';
 import CommonLayout from './layouts/common-layout.vue';
 export default {
   name: 'App',
-  data() {
+  data () {
     return {
-      locale: zhCN,
-    }
+      locale: zhCN
+    };
   },
   components: {
     BlankLayout,

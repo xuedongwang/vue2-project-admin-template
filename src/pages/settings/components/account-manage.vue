@@ -69,7 +69,7 @@
 <script>
 import { cloneDeep } from 'lodash-es';
 export default {
-  data() {
+  data () {
     return {
       step: 1,
       visible: false,
@@ -81,27 +81,27 @@ export default {
         name: '',
         description: '',
         address: ''
-      },
-    }
+      }
+    };
   },
   created () {
   },
   methods: {
-    bindEmailSuccess() {
+    bindEmailSuccess () {
       this.$notification.success({
         message: '绑定成功',
-        description: '安全邮箱绑定成功，现在可以通过安全邮箱修改密码和接受通知',
+        description: '安全邮箱绑定成功，现在可以通过安全邮箱修改密码和接受通知'
       });
     },
-    handleOk() {
+    handleOk () {
       this.step = 2;
     },
-    handleCancel() {
+    handleCancel () {
       this.visible = false;
     },
-    handleChangePassword() {}
+    handleChangePassword () {}
   }
-}
+};
 </script>
 
 <style>

@@ -10,36 +10,35 @@ export default {
       title: '主页'
     },
     {
-      key: '/article',
+      key: '/article/manage',
       icon: 'file-text',
       title: '文章管理'
     },
     {
-      key: '/category',
+      key: '/category/manage',
       icon: 'book',
       title: '分类管理'
     },
     {
-      key: '/user',
+      key: '/user/manage',
       icon: 'user',
       title: '用户管理',
       disabled: true
     },
     {
-      key: 'tags',
+      key: '/tag/manage',
       icon: 'tags',
-      title: '标签管理',
-      disabled: true
+      title: '标签管理'
     },
     {
-      key: '/message',
+      key: '/message/all',
       icon: 'message',
       title: '留言管理'
     },
     {
-      key: '/source',
+      key: '/source/all',
       icon: 'folder-open',
-      title: '资源管理',
+      title: '资源管理'
     },
     {
       key: '/settings/profile',

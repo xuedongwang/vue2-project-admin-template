@@ -9,7 +9,7 @@ const routes = [
   },
   {
     name: 'article-manage',
-    path: '/article',
+    path: '/article/manage',
     component: () => import('../pages/article/manage'),
     meta: {
       layout: 'CommonLayout',
@@ -18,7 +18,7 @@ const routes = [
   },
   {
     name: 'message',
-    path: '/message',
+    path: '/message/:type',
     component: () => import('../pages/message'),
     meta: {
       layout: 'CommonLayout',
@@ -27,7 +27,7 @@ const routes = [
   },
   {
     name: 'source',
-    path: '/source',
+    path: '/source/:type',
     component: () => import('../pages/source/manage'),
     meta: {
       layout: 'CommonLayout',
@@ -54,7 +54,7 @@ const routes = [
   },
   {
     name: 'category-manage',
-    path: '/category',
+    path: '/category/manage',
     component: () => import('../pages/category/manage'),
     meta: {
       layout: 'CommonLayout',
@@ -63,9 +63,28 @@ const routes = [
   },
   {
     name: 'create-category',
-    path: '/category/create/:id',
+    path: '/category/create',
     alias: '/category/edit/:id',
     component: () => import('../pages/category/create'),
+    meta: {
+      layout: 'CommonLayout',
+      needLogin: true
+    }
+  },
+  {
+    name: 'tag-manage',
+    path: '/tag/manage',
+    component: () => import('../pages/tag/manage'),
+    meta: {
+      layout: 'CommonLayout',
+      needLogin: true
+    }
+  },
+  {
+    name: 'create-tag',
+    path: '/tag/create',
+    alias: '/tag/edit/:id',
+    component: () => import('../pages/tag/create'),
     meta: {
       layout: 'CommonLayout',
       needLogin: true

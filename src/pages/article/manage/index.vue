@@ -77,12 +77,12 @@ const columns = [
   {
     title: '作者',
     dataIndex: 'author',
-    width: '100px',
+    width: '100px'
   },
   {
     title: '阅读量',
     width: '100px',
-    dataIndex: 'readCount',
+    dataIndex: 'readCount'
   },
   {
     title: '状态',
@@ -136,17 +136,17 @@ export default {
   title () {
     return this.name;
   },
-  mounted() {
+  mounted () {
     this.fetchArticleList();
   },
   methods: {
-    handleTableChange(args) {
+    handleTableChange (args) {
       console.log(args);
     },
-    handleSearch() {
+    handleSearch () {
       console.log(this.filterForm);
     },
-    fetchArticleList() {
+    fetchArticleList () {
       const hide = this.$message.loading({
         content: '加载中...',
         duration: 0,

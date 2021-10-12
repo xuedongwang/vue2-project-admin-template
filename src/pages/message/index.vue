@@ -3,16 +3,31 @@
     <a-space direction="vertical" style="width:100%;">
       <a-row>
         <a-col :span="24">
-          <a-card title="文章管理" :bordered="false">
+          <a-card title="留言管理" :bordered="false">
             <!-- 搜索 -->
-            <a-radio-group v-model="value" @change="handleSearch">
-              <a-radio-button value="1">全部 (12)</a-radio-button>
-              <a-radio-button value="2">我的 (2)</a-radio-button>
-              <a-radio-button value="3">待审 (3)</a-radio-button>
-              <a-radio-button value="4">已批准 (45)</a-radio-button>
-              <a-radio-button value="5">回收站 (34)</a-radio-button>
+            <a-radio-group :value="value" @change="handleMsgTypeChange">
+              <a-radio-button value="all">全部 (12)</a-radio-button>
+              <a-radio-button value="my">我的 (2)</a-radio-button>
+              <a-radio-button value="moderated">待审 (3)</a-radio-button>
+              <a-radio-button value="approved">已批准 (45)</a-radio-button>
+              <a-radio-button value="spam">垃圾 (45)</a-radio-button>
+              <a-radio-button value="trash">回收站 (34)</a-radio-button>
             </a-radio-group>
-            <!-- 表格 -->
+            <!-- 搜索 -->
+            <a-form-model slot="extra" layout="inline" :model="searchForm" @submit="handleSearch" @submit.native.prevent>
+              <a-form-model-item>
+                <a-input v-model="searchForm.user" placeholder=""></a-input>
+              </a-form-model-item>
+              <a-form-model-item>
+                <a-button
+                  type="primary"
+                  html-type="submit"
+                  icon="search"
+                >
+                  搜索
+                </a-button>
+              </a-form-model-item>
+            </a-form-model>
           </a-card>
         </a-col>
       </a-row>
@@ -23,7 +38,7 @@
               <div class="head-left head-inner">
                 <div class="head-inner-item head-inner-item--active">
                   <span style="margin-right:5px;">用户留言</span>
-                  <a-badge :count="message.total" /></div>
+                </div>
               </div>
             </div>
             <div class="card-body">
@@ -114,12 +129,17 @@ export default {
       action: null,
       replayContent: '',
       replaying: false,
-      value: '1'
+      searchForm: {
+        user: ''
+      },
     };
   },
   computed: {
     user() {
       return this.$store.state.user.info || {};
+    },
+    value() {
+      return this.$route.params.type;
     }
   },
   mounted() {
@@ -127,6 +147,10 @@ export default {
   },
   methods: {
     handleSearch() {},
+    handleMsgTypeChange(e) {
+      const path = `/message/${e.target.value}`;
+      this.$router.push(path);
+    },
     handleSubmit() {
       this.replaying = true;
       setTimeout(() => {

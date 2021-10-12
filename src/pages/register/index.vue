@@ -66,7 +66,7 @@ export default {
     };
   },
   methods: {
-    loginAccount(data) {
+    loginAccount (data) {
       const hide = this.$message.loading({
         content: '正在登录...',
         duration: 0,
@@ -74,14 +74,14 @@ export default {
       });
       $http.post('/user/login', data)
         .then(() => {
-          hide()
+          hide();
           this.$message.success({
             content: '登录成功',
             key: 'key'
           });
         })
         .catch(err => {
-          hide()
+          hide();
           this.$message.error({
             content: '登录失败',
             key: 'key'
@@ -89,7 +89,7 @@ export default {
           throw err;
         });
     },
-    registerAccount(data) {
+    registerAccount (data) {
       this.registerLoading = true;
       const hide = this.$message.loading({
         content: '正在注册...',
@@ -99,7 +99,7 @@ export default {
       $http.post('/user/register', data)
         .then(() => {
           this.registerLoading = false;
-          hide()
+          hide();
           this.$message.success({
             content: '注册成功',
             key: 'key'
@@ -112,7 +112,7 @@ export default {
             key: 'key'
           });
           this.registerLoading = false;
-          hide()
+          hide();
           throw err;
         });
     },

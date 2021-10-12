@@ -46,11 +46,11 @@ export default {
   title () {
     return this.name;
   },
-  mounted() {
+  mounted () {
     this.fetchStatistics();
   },
   methods: {
-    fetchStatistics() {
+    fetchStatistics () {
       const hide = this.$message.loading({
         content: '加载中...',
         duration: 0,

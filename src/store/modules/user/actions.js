@@ -1,7 +1,7 @@
 import { message } from 'ant-design-vue';
 import { $http } from '@/utils';
 const actions = {
-  fetchUserinfo({ commit }) {
+  fetchUserinfo ({ commit }) {
     const hide = message.loading({
       content: '加载中...',
       duration: 0,

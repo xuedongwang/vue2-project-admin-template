@@ -1,10 +1,10 @@
-import { Extension } from '@tiptap/core'
-import { InputRule } from 'prosemirror-inputrules'
+import { Extension } from '@tiptap/core';
+import { InputRule } from 'prosemirror-inputrules';
 
 export const SmilieReplacer = Extension.create({
   name: 'smilieReplacer',
 
-  addInputRules() {
+  addInputRules () {
     return [
       new InputRule(/-___- $/, '😑 '),
       new InputRule(/:'-\) $/, '😂 '),
@@ -128,7 +128,7 @@ export const SmilieReplacer = Extension.create({
       new InputRule(/X\) $/, '😵 '),
       new InputRule(/:@ $/, '😠 '),
       new InputRule(/<3 $/, '❤️ '),
-      new InputRule(/\/shrug $/, '¯\\_(ツ)_/¯'),
-    ]
-  },
-})
+      new InputRule(/\/shrug $/, '¯\\_(ツ)_/¯')
+    ];
+  }
+});

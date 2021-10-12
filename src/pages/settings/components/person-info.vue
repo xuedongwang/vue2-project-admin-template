@@ -32,7 +32,7 @@
 <script>
 import { cloneDeep } from 'lodash-es';
 export default {
-  data() {
+  data () {
     return {
       profileForm: {
         name: '',
@@ -40,18 +40,18 @@ export default {
         address: ''
       },
       headers: {}
-    }
+    };
   },
   created () {
     this.profileForm = cloneDeep(this.$store.state.user.info || {});
   },
   methods: {
-    handleChange() {},
-    handleUpdateUserinfo() {
+    handleChange () {},
+    handleUpdateUserinfo () {
       this.$store.dispatch('user/fetchUserinfo');
     }
   }
-}
+};
 </script>
 
 <style>

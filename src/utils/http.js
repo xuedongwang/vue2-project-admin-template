@@ -2,12 +2,12 @@ import axios from 'axios';
 import { message } from 'ant-design-vue';
 
 const config = {
- baseURL: '//localhost:3000/api',
+  baseURL: '//localhost:3000/api',
 
- headers: {
-   auth: 'Xuedong Wang',
-   email: 'email@wangxuedong.com'
- },
+  headers: {
+    auth: 'Xuedong Wang',
+    email: 'email@wangxuedong.com'
+  }
 
 //  withCredentials: true
 };
@@ -30,7 +30,7 @@ httpInstant.interceptors.response.use(response => {
     });
     return Promise.reject(response);
   } else {
-    return Promise.reject(response)
+    return Promise.reject(response);
   }
 }, error => {
   return Promise.reject(error);

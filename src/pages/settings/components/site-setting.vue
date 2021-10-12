@@ -44,22 +44,22 @@
 <script>
 import { cloneDeep } from 'lodash-es';
 export default {
-  data() {
+  data () {
     return {
       profileForm: {
         name: '',
         description: '',
         address: ''
-      },
-    }
+      }
+    };
   },
   created () {
   },
   methods: {
-    handleUpdateSetting() {
+    handleUpdateSetting () {
     }
   }
-}
+};
 </script>
 
 <style>
