@@ -91,6 +91,25 @@ const routes = [
     }
   },
   {
+    name: 'user-manage',
+    path: '/user/manage',
+    component: () => import('../pages/user/manage'),
+    meta: {
+      layout: 'CommonLayout',
+      needLogin: true
+    }
+  },
+  {
+    name: 'create-user',
+    path: '/user/create',
+    alias: '/user/edit/:id',
+    component: () => import('../pages/user/create'),
+    meta: {
+      layout: 'CommonLayout',
+      needLogin: true
+    }
+  },
+  {
     name: 'login',
     path: '/login',
     component: () => import('../pages/login'),

@@ -2,12 +2,57 @@
   <div class="category">
     <a-row>
       <a-col :span="24">
-        <a-card title="创建标签" :bordered="false">
+        <a-card title="创建用户" :bordered="false">
           <a-form-model ref="categoryForm" v-bind="formItemLayout" :rules="rules" :model="form">
-            <a-form-model-item label="标签名" prop="name">
-              <a-input v-model="form.name" />
+            <a-form-model-item label="用户名" prop="username">
+              <a-input v-model="form.username">
+                <span slot="addonAfter">自动填充</span>
+              </a-input>
+              
             </a-form-model-item>
-            <a-form-model-item label="标签描述" prop="description">
+            <a-form-model-item label="邮箱" prop="email">
+              <a-input v-model="form.email" />
+            </a-form-model-item>
+            <a-form-model-item label="初始密码" prop="password">
+              <a-input v-model="form.password">
+                <span slot="addonAfter">随机生成</span>
+              </a-input>
+            </a-form-model-item>
+            <a-form-model-item label="发送用户通知">
+              <a-switch v-model="form.sendNotify" />
+            </a-form-model-item>
+            <a-form-model-item label="语言">
+              <a-select v-model="form.language">
+                <a-select-option value="english">
+                  English
+                </a-select-option>
+                <a-select-option value="chinese">
+                  简体中文
+                </a-select-option>
+              </a-select>
+            </a-form-model-item>
+            <a-form-model-item label="权限">
+              <!-- <a-select v-model="form.role">
+                <a-select-option value="admin">
+                  管理员
+                </a-select-option>
+                <a-select-option value="edit">
+                  编辑
+                </a-select-option>
+                <a-select-option value="author">
+                  作者
+                </a-select-option>
+              </a-select> -->
+              <a-tree-select
+                v-model="form.power"
+                style="width: 100%"
+                :tree-data="powerTreeData"
+                tree-checkable
+                :show-checked-strategy="SHOW_PARENT"
+                search-placeholder="Please select"
+              />
+            </a-form-model-item>
+            <a-form-model-item label="用户描述" prop="description">
               <a-input v-model="form.description" type="textarea" :autosize="{ minRows: 2, maxRows: 6 }" />
             </a-form-model-item>
             <a-form-model-item :wrapper-col="buttonItemLayout">
@@ -24,13 +69,24 @@
 </template>
 
 <script>
+import { TreeSelect } from 'ant-design-vue';
+import { power } from '@/config'
+const SHOW_PARENT = TreeSelect.SHOW_PARENT;
+
 export default {
   data () {
     return {
+      SHOW_PARENT,
+      powerTreeData: power.powerTreeData,
       loading: false,
       form: {
-        name: '',
-        description: ''
+        username: '',
+        description: '',
+        email: '',
+        power: [],
+        password: '',
+        language: 'english',
+        sendNotify: true
       },
       formItemLayout: {
         labelCol: { span: 2 },
@@ -41,7 +97,7 @@ export default {
         offset: 2
       },
       rules: {
-        name: [
+        username: [
           { required: true, message: '请输入文章标题', trigger: 'blur' },
           { min: 1, max: 50, message: '文章标题长度为1-50', trigger: 'blur' }
         ],
@@ -94,7 +150,7 @@ export default {
       .then(res => {
         this.loading = false;
         this.$message.success({
-          content: '创建标签成功',
+          content: '创建用户成功',
           key: 'key'
         });
         this.$router.back();
@@ -118,7 +174,7 @@ export default {
       .then(res => {
         this.loading = false;
         this.$message.success({
-          content: '更新标签成功',
+          content: '更新用户成功',
           key: 'key'
         });
         this.$router.back();

@@ -22,8 +22,7 @@ export default {
     {
       key: '/user/manage',
       icon: 'user',
-      title: '用户管理',
-      disabled: true
+      title: '用户管理'
     },
     {
       key: '/tag/manage',

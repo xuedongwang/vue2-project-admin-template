@@ -28,6 +28,7 @@
         </div>
         <div class="header-right">
           <span class="username">{{ user.name }}</span>
+          <a-tag color="blue">管理员</a-tag>
           <a-dropdown :trigger="['click']">
             <a-avatar size="large" :src="user.avatar" icon="user" class="pointer" />
             <a-menu slot="overlay">

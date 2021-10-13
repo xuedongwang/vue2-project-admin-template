@@ -1,20 +1,20 @@
 <template>
-  <div class="article">
+  <div class="user">
     <a-space direction="vertical" style="width:100%;">
       <a-row>
         <a-col :span="24">
-          <a-card title="标签管理" :bordered="false">
+          <a-card title="用户管理" :bordered="false">
             <a-button
               type="primary"
               slot="extra"
               :loading="loading"
-              @click="handleCreateCategory"
+              @click="handleCreateUser"
             >
-              创建标签
+              创建用户
             </a-button>
             <!-- 搜索 -->
             <a-form-model layout="inline" :model="filterForm" @submit="handleSearch" @submit.native.prevent>
-              <a-form-model-item label="标签名">
+              <a-form-model-item label="用户名">
                 <a-input v-model="filterForm.title"></a-input>
               </a-form-model-item>
               <a-form-model-item>
@@ -34,13 +34,18 @@
       <a-row>
         <a-col :span="24">
           <a-card :bordered="false">
-            <a-table @change="handleTableChange" :pagination="pagination" rowKey="id" :columns="columns" :data-source="article.list" bordered>
+            <a-table @change="handleTableChange" :pagination="pagination" rowKey="id" :columns="columns" :data-source="user.list" bordered>
               <p slot="expandedRowRender" slot-scope="record" style="margin: 0">
                 {{ record.description }}
               </p>
-              <template slot="status" slot-scope="isPublish">
-                <a-tag color="green" v-if="isPublish">已发布</a-tag>
-                <a-tag color="orange" v-else>草稿</a-tag>
+              <template slot="username" slot-scope="username">
+                <a-tooltip placement="topLeft" :title="username">
+                  {{ username }}
+                </a-tooltip>
+              </template>
+              <template slot="status" slot-scope="status">
+                <a-tag color="green" v-if="status === 1">正常</a-tag>
+                <a-tag color="orange" v-else>冻结</a-tag>
               </template>
               <template slot="createdAt" slot-scope="createdAt">
                 {{ createdAt | dayjs }}
@@ -51,7 +56,16 @@
               <template slot="operation" slot-scope="text,row">
                 <div class="row-operations">
                   <a @click="() => handleEdit(row)">编辑</a>
-                  <a style="color:#f5222d" @click="() => handleEdit(row)">删除</a>
+                  <a-popconfirm
+                    placement="topRight"
+                    okType="danger"
+                    :title="`确定要删除用户${row.username}?删除后不可恢复`"
+                    ok-text="删除"
+                    cancel-text="取消"
+                    @confirm="handleDelete(row)"
+                  >
+                    <a style="color:#f5222d">删除</a>
+                  </a-popconfirm>
                 </div>
               </template>
             </a-table>
@@ -65,23 +79,41 @@
 <script>
 const columns = [
   {
-    title: '标题',
-    dataIndex: 'title'
+    title: '用户名',
+    dataIndex: 'username',
+    ellipsis: true,
+    scopedSlots: { customRender: 'username' }
   },
   {
-    title: '作者',
-    dataIndex: 'author',
-    width: '100px'
+    title: '电子邮箱',
+    width: '200px',
+    ellipsis: true,
+    dataIndex: 'email'
+  },
+  {
+    title: '身份',
+    width: '100px',
+    dataIndex: 'role'
   },
   {
     title: '文章数',
     width: '100px',
-    dataIndex: 'readCount'
+    dataIndex: 'articleCount'
+  },
+  {
+    title: '分类数',
+    width: '100px',
+    dataIndex: 'categoryCount'
+  },
+  {
+    title: '标签数',
+    width: '100px',
+    dataIndex: 'tagCount'
   },
   {
     title: '状态',
     width: '100px',
-    dataIndex: 'isPublish',
+    dataIndex: 'status',
     scopedSlots: { customRender: 'status' }
   },
   {
@@ -108,13 +140,13 @@ export default {
   data () {
     return {
       name: '文章管理',
-      article: {
+      user: {
         list: [],
         total: 0
       },
       filterForm: {
         title: '',
-        isPublish: ''
+        status: ''
       },
       columns,
       loading: false,
@@ -131,7 +163,7 @@ export default {
     return this.name;
   },
   mounted () {
-    this.fetchArticleList();
+    this.fetchUserList();
   },
   methods: {
     handleTableChange (args) {
@@ -140,23 +172,23 @@ export default {
     handleSearch () {
       console.log(this.filterForm);
     },
-    fetchArticleList () {
+    fetchUserList () {
       const hide = this.$message.loading({
         content: '加载中...',
         duration: 0,
         key: 'key'
       });
       const params = {
-        ...this.filterForm
-      };
-      $http.get('/category/list', {
-        params,
+        ...this.filterForm,
         currentPage: this.pagination.current,
         pageSize: this.pagination.pageSize
+      };
+      $http.get('/user/list', {
+        params
       })
         .then(res => {
           hide();
-          this.article.list = res.data.list;
+          this.user.list = res.data.list;
           this.pagination.total = res.data.total;
         })
         .catch(err => {
@@ -167,13 +199,41 @@ export default {
           throw err;
         });
     },
+    handleDelete(row) {
+      console.log(row);
+      const hide = this.$message.loading({
+        content: `正在删除用户${row.username}...`,
+        duration: 0,
+        key: 'key'
+      });
+      const params = {
+        id: row.id
+      };
+      $http.get('/user/delete', {
+        params
+      })
+        .then(res => {
+          this.$message.success({
+            content: `删除用户${row.username}成功`,
+            key: 'key'
+          });
+          this.fetchUserList();
+        })
+        .catch(err => {
+          this.$message.error({
+            content: '网络故障，请重试',
+            key: 'key'
+          });
+          throw err;
+        });
+    },
     handleEdit (row) {
-      const path = `/category/edit/${row.id}`;
+      const path = `/user/edit/${row.id}`;
       this.$router.push(path);
     },
-    handleCreateCategory () {
+    handleCreateUser () {
       this.$router.push({
-        name: 'create-category'
+        name: 'create-user'
       });
     }
   }
