@@ -153,6 +153,14 @@ const routes = [
     }
   },
   {
+    name: 'password-reset',
+    path: '/password/reset',
+    component: () => import('../pages/password/reset'),
+    meta: {
+      layout: 'BlankLayout'
+    }
+  },
+  {
     name: '403',
     path: '/403',
     component: () => import('../pages/403'),

@@ -16,7 +16,7 @@
             登录遇到问题：
             <router-link to="register">注册帐号</router-link>
             <a-divider type="vertical" />
-            <router-link to="register">找回密码</router-link>
+            <router-link to="password/reset">找回密码</router-link>
           </a-form-model-item>
         </a-form-model>
       </a-card>
@@ -56,12 +56,39 @@ export default {
     };
   },
   methods: {
+    login() {
+      const hide = this.$message.loading({
+        content: '登录中...',
+        duration: 0,
+        key: 'key'
+      });
+      this.loginLoading = true;
+      const data = {
+        ...this.form
+      }
+      $http.post('/user/login', data)
+        .then(res => {
+          this.$message.success({
+            content: '登录成功',
+            key: 'key'
+          });
+          this.loginLoading = false;
+          localStorage.setItem('token', res.data.token)
+        })
+        .catch(err => {
+          this.loginLoading = false;
+          this.$message.loading({
+            content: '网络故障，请重试',
+            key: 'key'
+          });
+          throw err;
+        });
+    },
     handleLogin () {
       this.$refs.loginForm.validate(valid => {
         if (valid) {
-          console.log(this.form);
+          this.login();
         } else {
-          console.log('error submit!!');
           return false;
         }
       });
