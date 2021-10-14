@@ -17,6 +17,26 @@
               <a-input v-model="form.password">
                 <span slot="addonAfter">随机生成</span>
               </a-input>
+              <!-- <a-progress
+                slot="help"
+                title="密码强度"
+                :strokeWidth="10"
+                :format="percent => {
+                  if (percent < 50) {
+                    return '弱';
+                  } else if (percent < 100) {
+                    return '中'
+                  } else {
+                    return '强'
+                  }
+                }"
+                :stroke-color="{
+                  '0%': '#f5222d',
+                  '50%': '#1890ff',
+                  '100%': '#52c41a',
+                }"
+                :percent="100"
+              /> -->
             </a-form-model-item>
             <a-form-model-item label="发送用户通知">
               <a-switch v-model="form.sendNotify" />

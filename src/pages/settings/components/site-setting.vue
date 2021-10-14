@@ -14,9 +14,47 @@
         <a-form-model-item label="备案号">
           <a-input v-model="profileForm.address"/>
         </a-form-model-item>
-        <a-form-model-item label="友情链接">
+        <!-- <a-form-model-item label="友情链接">
           <a-input v-model="profileForm.address"/>
+        </a-form-model-item> -->
+        <a-form-model-item
+          v-if="profileForm.domains.length===0"
+          label="友情链接"
+        >
+          <a-button block type="dashed" @click="addDomain">
+            <a-icon type="plus" />添加
+          </a-button>
         </a-form-model-item>
+        <template v-else>
+          <a-form-model-item
+            v-for="(domain, index) in profileForm.domains"
+            :key="domain.key"
+            :label="index === 0 ? '友情链接' : ''"
+            :prop="'domains.' + index + '.value'"
+            :rules="{
+              required: true,
+              message: 'domain can not be null',
+              trigger: 'blur',
+            }"
+          >
+            <a-input
+              v-model="domain.value"
+              style="width:calc(100% - 30px);margin-right: 6px;"
+            />
+            <a-icon
+              v-if="profileForm.domains.length > 0"
+              class="dynamic-delete-button"
+              type="minus-circle-o"
+              @click="removeDomain(domain)"
+            />
+          </a-form-model-item>
+
+          <a-form-model-item>
+            <a-button block type="dashed" @click="addDomain">
+              <a-icon type="plus" />添加
+            </a-button>
+          </a-form-model-item>
+        </template>
         <a-form-model-item label="站点语言">
           <a-select v-model="profileForm.region">
             <a-select-option value="shanghai">
@@ -47,6 +85,7 @@ export default {
   data () {
     return {
       profileForm: {
+        domains: [],
         name: '',
         description: '',
         address: ''
@@ -56,12 +95,34 @@ export default {
   created () {
   },
   methods: {
+    removeDomain(item) {
+      let index = this.profileForm.domains.indexOf(item);
+      if (index !== -1) {
+        this.profileForm.domains.splice(index, 1);
+      }
+    },
+    addDomain() {
+      this.profileForm.domains.push({
+        value: '',
+        key: Date.now(),
+      });
+    },
     handleUpdateSetting () {
     }
   }
 };
 </script>
 
-<style>
-
+<style lang="scss" scoped>
+.dynamic-delete-button {
+  cursor: pointer;
+  position: relative;
+  top: 4px;
+  font-size: 24px;
+  color: #999;
+  transition: all 0.3s;
+}
+.dynamic-delete-button:hover {
+  color: #777;
+}
 </style>

@@ -45,16 +45,21 @@ export default {
       title: '网站设置'
     },
     {
-      key: 'pay-circle',
-      icon: 'pay-circle',
-      title: '广告管理',
-      disabled: true
+      key: '/page/manage',
+      icon: 'file-text',
+      title: '页面管理'
     },
-    {
-      key: 'delete',
-      icon: 'delete',
-      title: '回收站',
-      disabled: true
-    }
+    // {
+    //   key: 'pay-circle',
+    //   icon: 'pay-circle',
+    //   title: '广告管理',
+    //   disabled: true
+    // },
+    // {
+    //   key: 'delete',
+    //   icon: 'delete',
+    //   title: '回收站',
+    //   disabled: true
+    // }
   ]
 };

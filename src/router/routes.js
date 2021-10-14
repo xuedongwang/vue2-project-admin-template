@@ -110,6 +110,33 @@ const routes = [
     }
   },
   {
+    name: 'page-manage',
+    path: '/page/manage',
+    component: () => import('../pages/page/manage'),
+    meta: {
+      layout: 'CommonLayout',
+      needLogin: true
+    }
+  },
+  {
+    name: 'page-view',
+    path: '/page/:id',
+    component: () => import('../pages/page/view'),
+    meta: {
+      layout: 'BlankLayout'
+    }
+  },
+  {
+    name: 'create-page',
+    path: '/page/create/:id',
+    alias: '/page/edit/:id',
+    component: () => import('../pages/page/create'),
+    meta: {
+      layout: 'BlankLayout',
+      needLogin: true
+    }
+  },
+  {
     name: 'login',
     path: '/login',
     component: () => import('../pages/login'),
