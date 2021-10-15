@@ -2,7 +2,6 @@ const path = require('path');
 const webpack = require('webpack');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const { VueLoaderPlugin } = require('vue-loader');
-const ESLintPlugin = require('eslint-webpack-plugin');
 
 const config = {
   target: 'web',
@@ -93,11 +92,7 @@ const config = {
       template: path.join(__dirname, '../index.html')
     }),
     new VueLoaderPlugin(),
-    new webpack.HotModuleReplacementPlugin(),
-    new ESLintPlugin({
-      formatter: require('eslint-friendly-formatter'),
-      extensions: ['.js', '.vue']
-    })
+    new webpack.HotModuleReplacementPlugin()
   ]
 };
 

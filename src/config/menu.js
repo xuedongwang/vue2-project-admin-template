@@ -48,7 +48,7 @@ export default {
       key: '/page/manage',
       icon: 'file-text',
       title: '页面管理'
-    },
+    }
     // {
     //   key: 'pay-circle',
     //   icon: 'pay-circle',

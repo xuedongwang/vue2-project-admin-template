@@ -1,6 +1,6 @@
 <template>
   <a-row type="flex" class="login" justify="space-around" align="middle">
-    <a-col flex="500px">
+    <a-col flex="500px" class="login-box">
       <a-card title="登录" :bordered="false" >
         <a-form-model ref="loginForm" :rules="rules" :layout="formLayout" :model="form" v-bind="formItemLayout">
           <a-form-model-item label="帐号" prop="account">
@@ -10,7 +10,10 @@
             <a-input-password v-model="form.password" placeholder="请输入密码" />
           </a-form-model-item>
           <a-form-model-item :wrapper-col="buttonItemLayout">
-            <a-button type="primary" @click="handleLogin" :loading="loginLoading">登录</a-button>
+            <a-space>
+              <a-button type="primary" @click="handleLogin" :loading="loginLoading">登录</a-button>
+              <a-button @click="resetForm">重置</a-button>
+            </a-space>
           </a-form-model-item>
           <a-form-model-item :wrapper-col="buttonItemLayout">
             登录遇到问题：
@@ -25,13 +28,16 @@
 </template>
 
 <script>
+import { titleMixin } from '@/mixins';
 export default {
-  name: 'login',
+  name: 'Login',
+  title: '用户登录',
+  mixins: [titleMixin],
   data () {
     return {
       form: {
-        account: '',
-        password: ''
+        account: 'root',
+        password: 'root'
       },
       loginLoading: false,
       formLayout: 'horizontal',
@@ -56,31 +62,25 @@ export default {
     };
   },
   methods: {
-    login() {
-      const hide = this.$message.loading({
-        content: '登录中...',
-        duration: 0,
-        key: 'key'
-      });
+    resetForm () {
+      this.$refs.loginForm.resetFields();
+    },
+    login () {
       this.loginLoading = true;
       const data = {
         ...this.form
-      }
-      $http.post('/user/login', data)
+      };
+      $http.post('/user/login', data, { loadingMsg: '登录中...' })
         .then(res => {
           this.$message.success({
             content: '登录成功',
             key: 'key'
           });
           this.loginLoading = false;
-          localStorage.setItem('token', res.data.token)
+          localStorage.setItem('token', res.data.token);
         })
         .catch(err => {
           this.loginLoading = false;
-          this.$message.loading({
-            content: '网络故障，请重试',
-            key: 'key'
-          });
           throw err;
         });
     },
@@ -100,5 +100,8 @@ export default {
 <style lang="scss" scoped>
 .login {
   height: 100vh;
+  &-box {
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  }
 }
 </style>

@@ -55,7 +55,7 @@
 
 <script>
 export default {
-  name: 'login',
+  name: 'password-reset',
   data () {
     return {
       current: 1,

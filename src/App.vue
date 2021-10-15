@@ -1,10 +1,10 @@
 <template>
   <div class="app">
-    <a-locale-provider :locale="locale">
+    <a-config-provider :locale="locale">
       <component :is="$route.meta.layout">
         <router-view></router-view>
       </component>
-    </a-locale-provider>
+    </a-config-provider>
   </div>
 </template>
 

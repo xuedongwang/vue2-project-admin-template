@@ -16,6 +16,4 @@ const titleMixin = {
   }
 };
 
-export default Vue => {
-  Vue.mixin(titleMixin);
-};
+export default titleMixin;

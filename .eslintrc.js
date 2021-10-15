@@ -20,6 +20,7 @@ module.exports = {
   // 全局变量忽略
   globals: {
     it: 'readonly',
+    $http: 'readonly',
     describe: 'readonly'
   }
 }

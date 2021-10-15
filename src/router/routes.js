@@ -152,7 +152,7 @@ const routes = [
       layout: 'BlankLayout'
     }
   },
-  {
+  { // 找回密码
     name: 'password-reset',
     path: '/password/reset',
     component: () => import('../pages/password/reset'),

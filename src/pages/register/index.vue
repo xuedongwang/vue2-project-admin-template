@@ -65,7 +65,7 @@ export default {
           { min: 4, max: 20, message: '密码长度为4-20', trigger: 'blur' }
         ],
         confirmPassword: [
-          { required: true, message: '请输入密码', trigger: 'blur' },
+          { required: true, message: '请再次输入密码', trigger: 'blur' },
           { trigger: 'blur', validator: validator.bind(this) }
         ]
       }

@@ -7,32 +7,50 @@ const config = {
   headers: {
     auth: 'Xuedong Wang',
     email: 'email@wangxuedong.com'
-  }
-
+  },
+  // 加载的loading
+  loadingMsg: '加载中...',
+  showLoadingMsg: true
 //  withCredentials: true
 };
 
 const httpInstant = axios.create(config);// 添加请求拦截器
+let hide = null;
 httpInstant.interceptors.request.use(config => {
+  console.log(config)
+  if (config.showLoadingMsg) {
+    hide = message.loading({
+      content: config.loadingMsg,
+      duration: 0,
+      key: 'key'
+    });
+  }
   return config;
 }, error => {
+  hide && hide();
   return Promise.reject(error);
 });
 
+function errorMsg(content = '网络故障，请重试') {
+  message.error({
+    content
+  });
+}
+
 httpInstant.interceptors.response.use(response => {
+  hide && hide();
   const { code } = response.data;
   if (code === 0) {
     return response.data;
   } else if (code === -1001) {
-    message.error({
-      content: '登录过期，请重新登录',
-      key: 'key'
-    });
+    errorMsg('登录过期，请重新登录');
     return Promise.reject(response);
   } else {
+    errorMsg();
     return Promise.reject(response);
   }
 }, error => {
+  errorMsg();
   return Promise.reject(error);
 });
 export default httpInstant;

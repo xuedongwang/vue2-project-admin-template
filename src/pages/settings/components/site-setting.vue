@@ -80,7 +80,7 @@
 </template>
 
 <script>
-import { cloneDeep } from 'lodash-es';
+// import { cloneDeep } from 'lodash-es';
 export default {
   data () {
     return {
@@ -95,16 +95,16 @@ export default {
   created () {
   },
   methods: {
-    removeDomain(item) {
-      let index = this.profileForm.domains.indexOf(item);
+    removeDomain (item) {
+      const index = this.profileForm.domains.indexOf(item);
       if (index !== -1) {
         this.profileForm.domains.splice(index, 1);
       }
     },
-    addDomain() {
+    addDomain () {
       this.profileForm.domains.push({
         value: '',
-        key: Date.now(),
+        key: Date.now()
       });
     },
     handleUpdateSetting () {

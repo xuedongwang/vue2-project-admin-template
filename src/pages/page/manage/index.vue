@@ -165,7 +165,7 @@ export default {
     this.fetchPageList();
   },
   methods: {
-    pageUrl(id) {
+    pageUrl (id) {
       return `${location.origin}/page/${id}`;
     },
     handleTableChange (args) {
@@ -201,9 +201,9 @@ export default {
           throw err;
         });
     },
-    handleDelete(row) {
+    handleDelete (row) {
       console.log(row);
-      const hide = this.$message.loading({
+      this.$message.loading({
         content: `正在删除页面${row.username}...`,
         duration: 0,
         key: 'key'

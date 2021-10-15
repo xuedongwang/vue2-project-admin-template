@@ -52,15 +52,15 @@ export default {
     };
   },
   computed: {
-    isEdit() {
+    isEdit () {
       return this.$route.path.startsWith('/category/edit/');
     }
   },
-  mounted() {
+  mounted () {
     this.isEdit && this.fetchCategoryDetail();
   },
   methods: {
-    fetchCategoryDetail() {
+    fetchCategoryDetail () {
       const params = {
         id: this.$route.params.id
       };
@@ -72,65 +72,65 @@ export default {
       $http.get('/category/detail', {
         params
       })
-      .then(res => {
-        hide();
-        this.form.name = res.data.title;
-        this.form.description = res.data.description;
-      })
-      .catch(err => {
-        this.$message.error({
-          content: '网络故障，请重试',
-          key: 'key'
+        .then(res => {
+          hide();
+          this.form.name = res.data.title;
+          this.form.description = res.data.description;
+        })
+        .catch(err => {
+          this.$message.error({
+            content: '网络故障，请重试',
+            key: 'key'
+          });
+          throw err;
         });
-        throw err;
-      })
     },
-    createCategory() {
+    createCategory () {
       const data = {
         ...this.form
       };
       this.loading = true;
       $http.post('/category/create', data)
-      .then(res => {
-        this.loading = false;
-        this.$message.success({
-          content: '创建标签成功',
-          key: 'key'
+        .then(res => {
+          this.loading = false;
+          this.$message.success({
+            content: '创建标签成功',
+            key: 'key'
+          });
+          this.$router.back();
+        })
+        .catch(err => {
+          this.loading = false;
+          this.$message.error({
+            content: '网络故障，请重试',
+            key: 'key'
+          });
+          throw err;
         });
-        this.$router.back();
-      })
-      .catch(err => {
-        this.loading = false;
-        this.$message.error({
-          content: '网络故障，请重试',
-          key: 'key'
-        });
-        throw err;
-      })
     },
-    updateCategory() {
+    updateCategory () {
       const data = {
         id: this.$route.params.id,
         ...this.form
       };
       this.loading = true;
       $http.post('/category/update', data)
-      .then(res => {
-        this.loading = false;
-        this.$message.success({
-          content: '更新标签成功',
-          key: 'key'
+        .then(res => {
+          this.loading = false;
+          this.$message.success({
+            content: '更新标签成功',
+            key: 'key'
+          });
+          this.$router.back();
+        })
+        .catch(err => {
+          this.loading = false;
+          this.$message.error({
+            content: '网络故障，请重试',
+            key: 'key'
+          });
+          throw err;
         });
-        this.$router.back();
-      })
-      .catch(err => {
-        this.loading = false;
-        this.$message.error({
-          content: '网络故障，请重试',
-          key: 'key'
-        });
-        throw err;
-      })
     },
     handleSubmit () {
       this.isEdit ? this.updateCategory() : this.createCategory();

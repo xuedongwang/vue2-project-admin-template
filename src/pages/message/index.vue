@@ -79,7 +79,7 @@
             </div>
           </a-card>
         </a-col>
-        
+
       </a-row>
     </a-space>
     <a-modal
@@ -131,27 +131,27 @@ export default {
       replaying: false,
       searchForm: {
         user: ''
-      },
+      }
     };
   },
   computed: {
-    user() {
+    user () {
       return this.$store.state.user.info || {};
     },
-    value() {
+    value () {
       return this.$route.params.type;
     }
   },
-  mounted() {
+  mounted () {
     this.fetchComment();
   },
   methods: {
-    handleSearch() {},
-    handleMsgTypeChange(e) {
+    handleSearch () {},
+    handleMsgTypeChange (e) {
       const path = `/message/${e.target.value}`;
       this.$router.push(path);
     },
-    handleSubmit() {
+    handleSubmit () {
       this.replaying = true;
       setTimeout(() => {
         this.replaying = false;
@@ -159,7 +159,7 @@ export default {
       }, 1000);
       console.log(this.replayContent);
     },
-    fetchComment() {
+    fetchComment () {
       const hide = this.$message.loading({
         content: '加载中...',
         duration: 0,
@@ -178,15 +178,15 @@ export default {
           throw err;
         });
     },
-    handleOk() {
+    handleOk () {
       this.confirmLoading = true;
       setTimeout(() => {
         this.confirmLoading = false;
         this.visible = false;
       }, 1000);
     },
-    handleCancel() {},
-    handleReplay(user) {
+    handleCancel () {},
+    handleReplay (user) {
       this.currentMessage = user;
       this.visible = true;
     },
