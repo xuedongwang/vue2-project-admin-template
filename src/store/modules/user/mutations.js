@@ -1,5 +1,6 @@
+import { SET_USER_INFO } from './mutation-types';
 const mutations = {
-  set_user_info (state, payload) {
+  [SET_USER_INFO] (state, payload) {
     state.info = payload;
   }
 };

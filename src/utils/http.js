@@ -2,7 +2,7 @@ import axios from 'axios';
 import { message } from 'ant-design-vue';
 
 const config = {
-  baseURL: '//localhost:3000/api',
+  baseURL: '//localhost:9000/v1',
 
   headers: {
     auth: 'Xuedong Wang',
@@ -33,11 +33,13 @@ httpInstant.interceptors.request.use(config => {
 
 function errorMsg(content = '网络故障，请重试') {
   message.error({
-    content
+    content,
+    key: 'key'
   });
 }
 
 httpInstant.interceptors.response.use(response => {
+  console.log('response', response)
   hide && hide();
   const { code } = response.data;
   if (code === 0) {

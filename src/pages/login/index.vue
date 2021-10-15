@@ -29,6 +29,7 @@
 
 <script>
 import { titleMixin } from '@/mixins';
+import { formRules } from '@/config';
 export default {
   name: 'Login',
   title: '用户登录',
@@ -50,14 +51,8 @@ export default {
         offset: 4
       },
       rules: {
-        account: [
-          { required: true, message: '请输入帐号', trigger: 'blur' },
-          { min: 4, max: 20, message: '帐号长度为4-20', trigger: 'blur' }
-        ],
-        password: [
-          { required: true, message: '请输入密码', trigger: 'blur' },
-          { min: 4, max: 20, message: '密码长度为4-20', trigger: 'blur' }
-        ]
+        account: formRules.account,
+        password: formRules.password
       }
     };
   },
@@ -70,7 +65,8 @@ export default {
       const data = {
         ...this.form
       };
-      $http.post('/user/login', data, { loadingMsg: '登录中...' })
+      console.log(API)
+      $http.post(API.USER.LOGIN, data, { loadingMsg: '登录中...' })
         .then(res => {
           this.$message.success({
             content: '登录成功',
@@ -78,6 +74,9 @@ export default {
           });
           this.loginLoading = false;
           localStorage.setItem('token', res.data.token);
+          this.$router.replace({
+            name: 'home'
+          });
         })
         .catch(err => {
           this.loginLoading = false;

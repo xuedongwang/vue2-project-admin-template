@@ -1,6 +1,6 @@
 <template>
   <a-row type="flex" class="register" justify="space-around" align="middle">
-    <a-col flex="500px">
+    <a-col flex="500px" class="register-box">
       <a-card title="注册帐号" :bordered="false" >
         <a-form-model ref="registerForm" :rules="rules" :layout="formLayout" :model="form" v-bind="formItemLayout">
           <a-form-model-item label="帐号" prop="account">
@@ -28,6 +28,7 @@
 </template>
 
 <script>
+import { formRules } from '@/config';
 export default {
   name: 'register',
   data () {
@@ -56,14 +57,8 @@ export default {
         offset: 4
       },
       rules: {
-        account: [
-          { required: true, message: '请输入帐号', trigger: 'blur' },
-          { min: 4, max: 20, message: '帐号长度为4-20', trigger: 'blur' }
-        ],
-        password: [
-          { required: true, message: '请输入密码', trigger: 'blur' },
-          { min: 4, max: 20, message: '密码长度为4-20', trigger: 'blur' }
-        ],
+        account: formRules.account,
+        password: formRules.password,
         confirmPassword: [
           { required: true, message: '请再次输入密码', trigger: 'blur' },
           { trigger: 'blur', validator: validator.bind(this) }
@@ -73,52 +68,29 @@ export default {
   },
   methods: {
     loginAccount (data) {
-      const hide = this.$message.loading({
-        content: '正在登录...',
-        duration: 0,
-        key: 'key'
-      });
-      $http.post('/user/login', data)
+      $http.post('/user/register', data, { loadingMsg: '注册中...' })
         .then(() => {
-          hide();
           this.$message.success({
-            content: '登录成功',
+            content: '注册成功',
             key: 'key'
           });
         })
         .catch(err => {
-          hide();
-          this.$message.error({
-            content: '登录失败',
-            key: 'key'
-          });
           throw err;
         });
     },
     registerAccount (data) {
       this.registerLoading = true;
-      const hide = this.$message.loading({
-        content: '正在注册...',
-        duration: 0,
-        key: 'key'
-      });
-      $http.post('/user/register', data)
+      $http.post('/user/register', data, { loadingMsg: '注册中...' })
         .then(() => {
           this.registerLoading = false;
-          hide();
           this.$message.success({
             content: '注册成功',
             key: 'key'
           });
-          this.loginAccount(data);
         })
         .catch(err => {
-          this.$message.error({
-            content: '注册失败',
-            key: 'key'
-          });
           this.registerLoading = false;
-          hide();
           throw err;
         });
     },
@@ -138,5 +110,8 @@ export default {
 <style lang="scss" scoped>
 .register {
   height: 100vh;
+  .register-box {
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  }
 }
 </style>

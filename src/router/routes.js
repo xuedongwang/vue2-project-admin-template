@@ -1,5 +1,6 @@
 const routes = [
   {
+    name: 'home',
     path: '/',
     component: () => import('../pages/home'),
     meta: {
@@ -164,6 +165,14 @@ const routes = [
     name: '403',
     path: '/403',
     component: () => import('../pages/403'),
+    meta: {
+      layout: 'BlankLayout'
+    }
+  },
+  {
+    name: '500',
+    path: '/500',
+    component: () => import('../pages/500'),
     meta: {
       layout: 'BlankLayout'
     }

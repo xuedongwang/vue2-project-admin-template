@@ -1,9 +1,9 @@
 <template>
-  <div class="not-found">
-    <a-result status="404" class="main" title="404" sub-title="页面没找到">
+  <div class="error">
+    <a-result status="500" class="main" title="500" sub-title="系统故障，请重试">
       <template #extra>
-        <a-button type="primary" @click="handleBackHome">
-          回到首页
+        <a-button type="primary" @click="handleRetry">
+          重试
         </a-button>
       </template>
     </a-result>
@@ -12,9 +12,9 @@
 
 <script>
 export default {
-  name: 'no-found',
+  name: 'server-error',
   methods: {
-    handleBackHome () {
+    handleRetry () {
       this.$router.replace({
         name: 'home'
       });
@@ -24,7 +24,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.not-found {
+.error {
   width: 100%;
   height: 100vh;
   display: flex;
@@ -33,3 +33,4 @@ export default {
   }
 }
 </style>
+

@@ -6,6 +6,7 @@ import router from './router';
 import { $event, $http } from './utils';
 import TabMenu from './components/tab-menu';
 import filters from './filters';
+import { API } from './config';
 
 import './assets/scss';
 import 'ant-design-vue/dist/antd.css';
@@ -16,6 +17,8 @@ Vue.use(TabMenu);
 
 window.$http = $http;
 window.$event = $event;
+
+window.API = API;
 
 /* eslint-disable no-new */
 new Vue({

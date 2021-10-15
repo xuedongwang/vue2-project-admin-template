@@ -1,24 +1,11 @@
-import { message } from 'ant-design-vue';
 import { $http } from '@/utils';
+import { SET_USER_INFO } from './mutation-types';
 const actions = {
   fetchUserinfo ({ commit }) {
-    const hide = message.loading({
-      content: '加载中...',
-      duration: 0,
-      key: 'key'
-    });
-    return $http.get('/user/info')
+    return $http.get('/user/info', {loadingMsg: '获取登录信息...'})
       .then(res => {
-        hide();
-        commit('set_user_info', res.data);
+        commit(SET_USER_INFO, res.data);
       })
-      .catch(err => {
-        message.error({
-          content: '网络故障，请重试',
-          key: 'key'
-        });
-        throw err;
-      });
   }
 };
 

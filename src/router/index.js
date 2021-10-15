@@ -11,10 +11,13 @@ const router = new VueRouter({
 });
 
 router.beforeEach(async (to, from, next) => {
-  console.log(store);
   if (to.meta.needLogin && !store.state.user.info) {
-    await store.dispatch('user/fetchUserinfo');
-    next();
+    try {
+      await store.dispatch('user/fetchUserinfo');
+      next();
+    } catch {
+      next({name: '500'});
+    }
   } else {
     next();
   }
