@@ -15,7 +15,7 @@
             <!-- 搜索 -->
             <a-form-model layout="inline" :model="filterForm" @submit="handleSearch" @submit.native.prevent>
               <a-form-model-item label="用户名">
-                <a-input v-model="filterForm.title"></a-input>
+                <a-input v-model="filterForm.name"></a-input>
               </a-form-model-item>
               <a-form-model-item>
                 <a-button
@@ -151,8 +151,7 @@ export default {
         total: 0
       },
       filterForm: {
-        title: '',
-        status: ''
+        name: '',
       },
       columns,
       loading: false,
@@ -175,15 +174,14 @@ export default {
     handleTableChange (args) {
       console.log(args);
     },
+    resetCurrentPage() {
+      this.pagination.current = 1;
+    },
     handleSearch () {
-      console.log(this.filterForm);
+      this.resetCurrentPage();
+      this.fetchUserList();
     },
     fetchUserList () {
-      const hide = this.$message.loading({
-        content: '加载中...',
-        duration: 0,
-        key: 'key'
-      });
       const params = {
         ...this.filterForm,
         currentPage: this.pagination.current,
@@ -193,17 +191,9 @@ export default {
         params
       })
         .then(res => {
-          hide();
           this.user.list = res.data.list;
           this.pagination.total = res.data.total;
         })
-        .catch(err => {
-          this.$message.error({
-            content: '网络故障，请重试',
-            key: 'key'
-          });
-          throw err;
-        });
     },
     handleDelete (row) {
       const params = {
