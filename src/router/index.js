@@ -12,15 +12,9 @@ const router = new VueRouter({
 
 router.beforeEach(async (to, from, next) => {
   if (to.meta.needLogin && !store.state.user.info) {
-    try {
-      await store.dispatch('user/fetchUserinfo');
-      next();
-    } catch {
-      next({name: '500'});
-    }
-  } else {
-    next();
+    await store.dispatch('user/fetchUserinfo');
   }
+  next();
 });
 
 export default router;

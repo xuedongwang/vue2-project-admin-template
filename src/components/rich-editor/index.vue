@@ -767,6 +767,9 @@ export default {
         }
       }
     },
+    refresh() {
+      this.initEditor();
+    },
     initEditor () {
       const vm = this;
       this.editor = new Editor({

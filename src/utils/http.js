@@ -1,5 +1,6 @@
 import axios from 'axios';
 import { message } from 'ant-design-vue';
+import router from '@/router';
 
 const config = {
   baseURL: '//localhost:9000/v1',
@@ -17,7 +18,9 @@ const config = {
 const httpInstant = axios.create(config);// 添加请求拦截器
 let hide = null;
 httpInstant.interceptors.request.use(config => {
-  console.log(config)
+  if (localStorage.getItem('token')) {
+    config.headers.token = localStorage.getItem('token')
+  }
   if (config.showLoadingMsg) {
     hide = message.loading({
       content: config.loadingMsg,
@@ -39,13 +42,13 @@ function errorMsg(content = '网络故障，请重试') {
 }
 
 httpInstant.interceptors.response.use(response => {
-  console.log('response', response)
   hide && hide();
   const { code } = response.data;
   if (code === 0) {
     return response.data;
   } else if (code === -1001) {
     errorMsg('登录过期，请重新登录');
+    router.replace('/login');
     return Promise.reject(response);
   } else {
     errorMsg();

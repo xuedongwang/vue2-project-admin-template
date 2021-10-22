@@ -1,76 +1,39 @@
 <template>
-  <div class="category">
+  <div class="user">
     <a-row>
       <a-col :span="24">
-        <a-card title="创建用户" :bordered="false">
-          <a-form-model ref="categoryForm" v-bind="formItemLayout" :rules="rules" :model="form">
-            <a-form-model-item label="用户名" prop="username">
-              <a-input v-model="form.username">
-                <span slot="addonAfter">自动填充</span>
+        <a-card :title="isEdit ? `编辑用户`:`创建用户`" :bordered="false">
+          <a-form-model ref="userForm" v-bind="formItemLayout" :rules="rules" :model="form">
+            <a-form-model-item label="昵称" prop="name">
+              <a-input v-model="form.name">
+                <span slot="addonAfter" @click="handleGenerateUserName">随机生成</span>
               </a-input>
-
             </a-form-model-item>
-            <a-form-model-item label="邮箱" prop="email">
-              <a-input v-model="form.email" />
+            <a-form-model-item v-if="!isEdit" label="帐号" prop="account">
+              <a-input v-model="form.account">
+                <span slot="addonAfter" @click="handleGenerateUserAccount">随机生成</span>
+              </a-input>
             </a-form-model-item>
-            <a-form-model-item label="初始密码" prop="password">
+            <a-form-model-item v-if="!isEdit" label="初始密码" prop="password">
               <a-input v-model="form.password">
-                <span slot="addonAfter">随机生成</span>
+                <span slot="addonAfter" @click="handleGeneratePassword">随机生成</span>
               </a-input>
-              <!-- <a-progress
-                slot="help"
-                title="密码强度"
-                :strokeWidth="10"
-                :format="percent => {
-                  if (percent < 50) {
-                    return '弱';
-                  } else if (percent < 100) {
-                    return '中'
-                  } else {
-                    return '强'
-                  }
-                }"
-                :stroke-color="{
-                  '0%': '#f5222d',
-                  '50%': '#1890ff',
-                  '100%': '#52c41a',
-                }"
-                :percent="100"
-              /> -->
             </a-form-model-item>
-            <a-form-model-item label="发送用户通知">
+            <a-form-model-item v-if="!isEdit" label="发送用户通知" help="发送帐号信息到用户的邮箱">
               <a-switch v-model="form.sendNotify" />
+            </a-form-model-item>
+            <a-form-model-item v-if="form.sendNotify && !isEdit" label="邮箱" prop="email">
+              <a-input v-model="form.email" />
             </a-form-model-item>
             <a-form-model-item label="语言">
               <a-select v-model="form.language">
-                <a-select-option value="english">
+                <a-select-option value="English">
                   English
                 </a-select-option>
-                <a-select-option value="chinese">
+                <a-select-option value="Chinese">
                   简体中文
                 </a-select-option>
               </a-select>
-            </a-form-model-item>
-            <a-form-model-item label="权限">
-              <!-- <a-select v-model="form.role">
-                <a-select-option value="admin">
-                  管理员
-                </a-select-option>
-                <a-select-option value="edit">
-                  编辑
-                </a-select-option>
-                <a-select-option value="author">
-                  作者
-                </a-select-option>
-              </a-select> -->
-              <a-tree-select
-                v-model="form.power"
-                style="width: 100%"
-                :tree-data="powerTreeData"
-                tree-checkable
-                :show-checked-strategy="SHOW_PARENT"
-                search-placeholder="Please select"
-              />
             </a-form-model-item>
             <a-form-model-item label="用户描述" prop="description">
               <a-input v-model="form.description" type="textarea" :autosize="{ minRows: 2, maxRows: 6 }" />
@@ -91,6 +54,7 @@
 <script>
 import { TreeSelect } from 'ant-design-vue';
 import { power } from '@/config';
+import { nanoid } from 'nanoid'
 const SHOW_PARENT = TreeSelect.SHOW_PARENT;
 
 export default {
@@ -100,13 +64,14 @@ export default {
       powerTreeData: power.powerTreeData,
       loading: false,
       form: {
-        username: '',
+        name: '',
+        account: '',
         description: '',
         email: '',
         power: [],
         password: '',
-        language: 'english',
-        sendNotify: true
+        language: 'Chinese',
+        sendNotify: false
       },
       formItemLayout: {
         labelCol: { span: 2 },
@@ -117,102 +82,97 @@ export default {
         offset: 2
       },
       rules: {
-        username: [
-          { required: true, message: '请输入文章标题', trigger: 'blur' },
-          { min: 1, max: 50, message: '文章标题长度为1-50', trigger: 'blur' }
+        account: [
+          { required: true, message: '请输入用户名称', trigger: 'blur' },
+          { min: 1, max: 50, message: '用户名称长度为1-50', trigger: 'blur' }
+        ],
+        email: [
+          { required: true, message: '请输入邮箱', trigger: 'blur' },
+          { pattern: /^[A-Za-z0-9\u4e00-\u9fa5]+@[a-zA-Z0-9_-]+(\.[a-zA-Z0-9_-]+)+$/, message: '邮箱格式不正确', trigger: 'blur' }
+        ],
+        password: [
+          { required: true, message: '请输入用户密码', trigger: 'blur' },
+          { min: 1, max: 50, message: '用户密码长度为1-50', trigger: 'blur' }
         ],
         description: [
-          { min: 0, max: 500, message: '文章描述长度最长为500', trigger: 'blur' }
+          { min: 0, max: 500, message: '用户描述长度最长为500', trigger: 'blur' }
         ]
       }
     };
   },
   computed: {
     isEdit () {
-      return this.$route.path.startsWith('/category/edit/');
+      return this.$route.path.startsWith('/user/edit/');
     }
   },
   mounted () {
-    this.isEdit && this.fetchCategoryDetail();
+    this.isEdit && this.fetchUserInfo();
   },
   methods: {
-    fetchCategoryDetail () {
+    handleGenerateUserName() {
+      this.form.name = `用户｜${nanoid()}`
+    },
+    handleGenerateUserAccount() {
+      this.form.account = nanoid();
+    },
+    handleGeneratePassword() {
+      this.form.password = nanoid();
+    },
+    fetchUserInfo () {
       const params = {
-        id: this.$route.params.id
+        ...this.form
       };
-      const hide = this.$message.loading({
-        content: '加载中...',
-        duration: 0,
-        key: 'key'
-      });
-      $http.get('/category/detail', {
+      $http.get('/user/info', {
         params
       })
         .then(res => {
-          hide();
-          this.form.name = res.data.title;
-          this.form.description = res.data.description;
+          this.form = res.data;
         })
-        .catch(err => {
-          this.$message.error({
-            content: '网络故障，请重试',
-            key: 'key'
-          });
-          throw err;
-        });
     },
-    createCategory () {
+    createUser () {
       const data = {
         ...this.form
       };
+      console.log(data);
       this.loading = true;
-      $http.post('/category/create', data)
+      $http.post('/user/create', data)
         .then(res => {
-          this.loading = false;
-          this.$message.success({
-            content: '创建用户成功',
-            key: 'key'
-          });
+          this.$message.success('创建用户成功');
           this.$router.back();
         })
-        .catch(err => {
+        .finally(() => {
           this.loading = false;
-          this.$message.error({
-            content: '网络故障，请重试',
-            key: 'key'
-          });
-          throw err;
-        });
+        })
     },
-    updateCategory () {
-      const data = {
-        id: this.$route.params.id,
-        ...this.form
-      };
+    updateUserInfo () {
       this.loading = true;
-      $http.post('/category/update', data)
+      const data = {
+        id: this.form.id,
+        name: this.form.name,
+        avatar: this.form.avatar,
+        description: this.form.description,
+        language: this.form.language
+      };
+      $http.post('/user/update', data)
         .then(res => {
-          this.loading = false;
-          this.$message.success({
-            content: '更新用户成功',
-            key: 'key'
-          });
+          this.$message.success('更新用户成功');
           this.$router.back();
         })
-        .catch(err => {
+        .finally(() => {
           this.loading = false;
-          this.$message.error({
-            content: '网络故障，请重试',
-            key: 'key'
-          });
-          throw err;
-        });
+        })
     },
     handleSubmit () {
-      this.isEdit ? this.updateCategory() : this.createCategory();
+      this.$refs.userForm.validate(valid => {
+        if (valid) {
+          this.isEdit ? this.updateUserInfo() : this.createUser();
+        } else {
+          console.log('err');
+        }
+      })
     },
     handleResetForm () {
-      this.$refs.categoryForm.resetFields();
+      this.$refs.userForm.resetFields();
     }
   }
 };

@@ -64,7 +64,7 @@ const routes = [
   },
   {
     name: 'create-category',
-    path: '/category/create',
+    path: '/category/create/:id?',
     alias: '/category/edit/:id',
     component: () => import('../pages/category/create'),
     meta: {
@@ -83,7 +83,7 @@ const routes = [
   },
   {
     name: 'create-tag',
-    path: '/tag/create',
+    path: '/tag/create/:id?',
     alias: '/tag/edit/:id',
     component: () => import('../pages/tag/create'),
     meta: {
@@ -102,7 +102,7 @@ const routes = [
   },
   {
     name: 'create-user',
-    path: '/user/create',
+    path: '/user/create/:id?',
     alias: '/user/edit/:id',
     component: () => import('../pages/user/create'),
     meta: {

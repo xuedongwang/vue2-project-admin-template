@@ -1,7 +1,7 @@
 <template>
   <div class="home" v-if="statistics">
     <a-row :gutter="16">
-      <a-col :span="8">
+      <a-col :span="6">
         <a-card  :bordered="false">
           <a-statistic
             title="文章"
@@ -11,7 +11,7 @@
           </a-statistic>
         </a-card>
       </a-col>
-      <a-col :span="8">
+      <a-col :span="6">
         <a-card  :bordered="false">
           <a-statistic
             title="分类"
@@ -21,12 +21,22 @@
           </a-statistic>
         </a-card>
       </a-col>
-      <a-col :span="8">
+      <a-col :span="6">
         <a-card  :bordered="false">
           <a-statistic
             title="留言"
             :value="statistics.commentCount"
             suffix="条"
+          >
+          </a-statistic>
+        </a-card>
+      </a-col>
+      <a-col :span="6">
+        <a-card  :bordered="false">
+          <a-statistic
+            title="用户"
+            :value="statistics.usrCount"
+            suffix="人"
           >
           </a-statistic>
         </a-card>

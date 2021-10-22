@@ -1,87 +1,100 @@
 <template>
   <div class="message" v-if="message">
-    <a-space direction="vertical" style="width:100%;">
-      <a-row>
-        <a-col :span="24">
-          <a-card title="留言管理" :bordered="false">
-            <!-- 搜索 -->
-            <a-radio-group :value="value" @change="handleMsgTypeChange">
-              <a-radio-button value="all">全部 (12)</a-radio-button>
-              <a-radio-button value="my">我的 (2)</a-radio-button>
-              <a-radio-button value="moderated">待审 (3)</a-radio-button>
-              <a-radio-button value="approved">已批准 (45)</a-radio-button>
-              <a-radio-button value="spam">垃圾 (45)</a-radio-button>
-              <a-radio-button value="trash">回收站 (34)</a-radio-button>
-            </a-radio-group>
-            <!-- 搜索 -->
-            <a-form-model slot="extra" layout="inline" :model="searchForm" @submit="handleSearch" @submit.native.prevent>
-              <a-form-model-item>
-                <a-input v-model="searchForm.user" placeholder=""></a-input>
-              </a-form-model-item>
-              <a-form-model-item>
-                <a-button
-                  type="primary"
-                  html-type="submit"
-                  icon="search"
-                >
-                  搜索
-                </a-button>
-              </a-form-model-item>
-            </a-form-model>
-          </a-card>
-        </a-col>
-      </a-row>
-      <a-row>
-        <a-col :span="24">
-          <a-card class="card">
-            <div class="card-head">
-              <div class="head-left head-inner">
-                <div class="head-inner-item head-inner-item--active">
-                  <span style="margin-right:5px;">用户留言</span>
-                </div>
+    <a-row>
+      <a-col :span="24">
+        <a-card title="留言管理" :bordered="false">
+          <!-- 搜索 -->
+          <a-radio-group :value="type" @change="handleMsgTypeChange">
+            <a-radio-button
+              v-for="item of messageTypeList"
+              :key="item.type"
+              :value="item.type"
+            >
+              {{ item.name }} ({{messageTypeMap[item.type]}})
+            </a-radio-button>
+          </a-radio-group>
+          <!-- 搜索 -->
+          <a-form-model slot="extra" layout="inline" :model="searchForm" @submit="handleSearch" @submit.native.prevent>
+            <a-form-model-item>
+              <a-input v-model="searchForm.user" placeholder=""></a-input>
+            </a-form-model-item>
+            <a-form-model-item>
+              <a-button
+                type="primary"
+                html-type="submit"
+                icon="search"
+              >
+                搜索
+              </a-button>
+              <a-button @click="handleCreate">创建测试留言</a-button>
+            </a-form-model-item>
+          </a-form-model>
+        </a-card>
+      </a-col>
+    </a-row>
+    <a-row style="margin-top:10px">
+      <a-col :span="24">
+        <a-card class="card">
+          <div class="card-head">
+            <div class="head-left head-inner">
+              <div class="head-inner-item head-inner-item--active">
+                <span style="margin-right:5px;">用户留言</span>
               </div>
             </div>
-            <div class="card-body">
-              <a-comment v-for="message of message.list" :key="message.id">
-                <template slot="actions">
-                  <span key="comment-basic-like">
-                    <a-tooltip title="Like">
-                      <a-icon type="like" :theme="action === 'liked' ? 'filled' : 'outlined'" />
-                    </a-tooltip>
-                    <span style="padding-left: '8px';cursor: 'auto'">
-                      {{ message.likes }}
-                    </span>
+          </div>
+          <div class="card-body">
+            <a-comment v-for="message of message.list" :key="message.id">
+              <template slot="actions">
+                <span key="comment-basic-like">
+                  <a-tooltip title="Like">
+                    <a-icon type="like" :theme="action === 'liked' ? 'filled' : 'outlined'" />
+                  </a-tooltip>
+                  <span style="padding-left: '8px';cursor: 'auto'">
+                    {{ message.likes }}
                   </span>
-                  <span key="comment-basic-dislike">
-                    <a-tooltip title="Dislike">
-                      <a-icon
-                        type="dislike"
-                        :theme="action === 'disliked' ? 'filled' : 'outlined'"
-                      />
-                    </a-tooltip>
-                    <span style="padding-left: '8px';cursor: 'auto'">
-                      {{ message.dislikes }}
-                    </span>
+                </span>
+                <span key="comment-basic-dislike">
+                  <a-tooltip title="Dislike">
+                    <a-icon
+                      type="dislike"
+                      :theme="action === 'disliked' ? 'filled' : 'outlined'"
+                    />
+                  </a-tooltip>
+                  <span style="padding-left: '8px';cursor: 'auto'">
+                    {{ message.dislikes }}
                   </span>
-                  <span key="comment-basic-reply-to" @click="handleReplay(message)">回复</span>
-                </template>
-                <a slot="author">{{ message.name }}</a>
-                <a-avatar
-                  slot="avatar"
-                  :src="message.avatar"
-                  alt="Han Solo"
-                />
-                <p slot="content">{{ message.message }}</p>
-                <a-tooltip slot="datetime" :title="message.createdAt">
-                  <span>{{ message.createdAt }}</span>
-                </a-tooltip>
-              </a-comment>
-            </div>
-          </a-card>
-        </a-col>
+                </span>
+                <span key="comment-basic-reply-to" @click="handleReplay(message)">回复</span>
+                <span key="comment-delete" @click="handleDelete(message)">删除</span>
+                <span key="comment-approved" @click="handleApproved(message)">展示</span>
+              </template>
+              <a slot="author">{{ message.name }}</a>
+              <a-avatar
+                slot="avatar"
+                :src="message.avatar"
+                alt="Han Solo"
+              />
+              <p slot="content">{{ message.message }}</p>
+              <template v-if="message.children && message.children.length > 0">
+                <a-comment v-for="item of message.children" :key="item.id">
+                  <a slot="author">{{ item.name }}</a>
+                  <a-avatar
+                    slot="avatar"
+                    :src="item.avatar"
+                    :alt="item.name"
+                  />
+                  <p slot="content">{{ item.message }}</p>
+                </a-comment>
+              </template>
+              <a-tooltip slot="datetime" :title="message.createdAt">
+                <span>{{ message.createdAt }}</span>
+              </a-tooltip>
+            </a-comment>
+          </div>
+        </a-card>
+      </a-col>
 
-      </a-row>
-    </a-space>
+    </a-row>
     <a-modal
       wrapClassName="replay-message-dialog"
       :width="700"
@@ -118,6 +131,25 @@
 export default {
   data () {
     return {
+      messageTypeList: [{
+        type: 'all',
+        name: '全部'
+      }, {
+        type: 'moderated',
+        name: '待审'
+      }, {
+        type: 'approved',
+        name: '已批准'
+      }, {
+        type: 'trash',
+        name: '回收站'
+      }],
+      messageTypeMap: {
+        all: 0,
+        moderated: 0,
+        approved: 0,
+        trash: 0
+      },
       hasData: true,
       loadMoreLoading: false,
       confirmLoading: false,
@@ -131,6 +163,10 @@ export default {
       replaying: false,
       searchForm: {
         user: ''
+      },
+      pagination: {
+        currentPage: 1,
+        pageSize: 10
       }
     };
   },
@@ -138,12 +174,16 @@ export default {
     user () {
       return this.$store.state.user.info || {};
     },
-    value () {
+    type () {
       return this.$route.params.type;
     }
   },
   mounted () {
     this.fetchComment();
+  },
+  beforeRouteUpdate (to, from, next) {
+    this.fetchComment(to.params.type);
+    next();
   },
   methods: {
     handleSearch () {},
@@ -153,30 +193,68 @@ export default {
     },
     handleSubmit () {
       this.replaying = true;
-      setTimeout(() => {
-        this.replaying = false;
-        this.visible = false;
-      }, 1000);
-      console.log(this.replayContent);
-    },
-    fetchComment () {
-      const hide = this.$message.loading({
-        content: '加载中...',
-        duration: 0,
-        key: 'key'
-      });
-      $http.get('/message/list')
+      const data = {
+        messageId: this.currentMessage.id,
+        message: this.replayContent
+      };
+      $http.post('/message/create', data)
         .then(res => {
-          hide();
-          this.message = res.data;
+          this.replayContent = '';
+          this.visible = false;
+          this.$message.success('回复留言成功')
+          this.fetchComment();
         })
-        .catch(err => {
-          this.$message.error({
-            content: '网络故障，请重试',
-            key: 'key'
-          });
-          throw err;
-        });
+        .finally(() => {
+          this.replaying = false;
+        })
+    },
+    handleCreate() {
+      const data = {};
+      $http.post('/message/create', data)
+        .then(res => {
+          this.$message.success('创建留言成功')
+          this.fetchComment();
+        })
+    },
+    fetchComment (type) {
+      const params = {
+        type: type || this.type,
+        ...this.pagination
+      };
+      $http.get('/message/list', {
+        params
+      })
+        .then(res => {
+          this.message = res.data;
+          this.messageTypeMap.all = res.data.all;
+          this.messageTypeMap.moderated = res.data.moderated;
+          this.messageTypeMap.approved = res.data.approved;
+          this.messageTypeMap.trash = res.data.trash;
+        })
+    },
+    handleApproved({id}) {
+      const params = {
+        id
+      };
+      $http.get('/message/approved', {
+        params
+      })
+        .then(res => {
+          this.$message.success('审核留言成功')
+          this.fetchComment();
+        })
+    },
+    handleDelete({ id }) {
+      const params = {
+        id
+      }
+      $http.get('/message/delete', {
+        params
+      })
+      .then(res => {
+        this.$message.success('删除成功')
+        this.fetchComment();
+      })
     },
     handleOk () {
       this.confirmLoading = true;
@@ -186,8 +264,8 @@ export default {
       }, 1000);
     },
     handleCancel () {},
-    handleReplay (user) {
-      this.currentMessage = user;
+    handleReplay (message) {
+      this.currentMessage = message;
       this.visible = true;
     },
     onLoadMore () {

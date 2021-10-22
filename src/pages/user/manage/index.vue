@@ -38,20 +38,29 @@
               <p slot="expandedRowRender" slot-scope="record" style="margin: 0">
                 {{ record.description }}
               </p>
-              <template slot="username" slot-scope="username">
-                <a-tooltip placement="topLeft" :title="username">
-                  {{ username }}
+              <template slot="name" slot-scope="name">
+                <a-tooltip placement="topLeft" :title="name">
+                  {{ name }}
                 </a-tooltip>
+              </template>
+              <template slot="email" slot-scope="email">
+                <a-tooltip placement="topLeft" :title="email">
+                  {{ email | formatString }}
+                </a-tooltip>
+              </template>
+              <template slot="role" slot-scope="role">
+                <a-tag color="green" v-if="role === 'admin'">管理员</a-tag>
+                <a-tag color="orange" v-else>成员</a-tag>
               </template>
               <template slot="status" slot-scope="status">
                 <a-tag color="green" v-if="status === 1">正常</a-tag>
                 <a-tag color="orange" v-else>冻结</a-tag>
               </template>
               <template slot="createdAt" slot-scope="createdAt">
-                {{ createdAt | dayjs }}
+                {{ createdAt | dayjs('YYYY年MM月DD日 hh:mm:ss') }}
               </template>
               <template slot="updatedAt" slot-scope="updatedAt">
-                {{ updatedAt | dayjs }}
+                {{ updatedAt | dayjs('YYYY年MM月DD日 hh:mm:ss') }}
               </template>
               <template slot="operation" slot-scope="text,row">
                 <div class="row-operations">
@@ -59,7 +68,7 @@
                   <a-popconfirm
                     placement="topRight"
                     okType="danger"
-                    :title="`确定要删除用户${row.username}?删除后不可恢复`"
+                    :title="`确定要删除用户${row.name}?删除后不可恢复`"
                     ok-text="删除"
                     cancel-text="取消"
                     @confirm="handleDelete(row)"
@@ -80,20 +89,22 @@
 const columns = [
   {
     title: '用户名',
-    dataIndex: 'username',
+    dataIndex: 'name',
     ellipsis: true,
-    scopedSlots: { customRender: 'username' }
+    scopedSlots: { customRender: 'name' }
   },
   {
     title: '电子邮箱',
     width: '200px',
     ellipsis: true,
-    dataIndex: 'email'
+    dataIndex: 'email',
+    scopedSlots: { customRender: 'email' }
   },
   {
     title: '身份',
     width: '100px',
-    dataIndex: 'role'
+    dataIndex: 'role',
+    scopedSlots: { customRender: 'role' }
   },
   {
     title: '文章数',
@@ -106,11 +117,6 @@ const columns = [
     dataIndex: 'categoryCount'
   },
   {
-    title: '标签数',
-    width: '100px',
-    dataIndex: 'tagCount'
-  },
-  {
     title: '状态',
     width: '100px',
     dataIndex: 'status',
@@ -119,13 +125,13 @@ const columns = [
   {
     title: '创建时间',
     dataIndex: 'createdAt',
-    width: '180px',
+    width: '220px',
     scopedSlots: { customRender: 'createdAt' }
   },
   {
     title: '修改时间',
     dataIndex: 'updatedAt',
-    width: '180px',
+    width: '220px',
     scopedSlots: { customRender: 'updatedAt' }
   },
   {
@@ -200,12 +206,6 @@ export default {
         });
     },
     handleDelete (row) {
-      console.log(row);
-      this.$message.loading({
-        content: `正在删除用户${row.username}...`,
-        duration: 0,
-        key: 'key'
-      });
       const params = {
         id: row.id
       };
@@ -214,18 +214,11 @@ export default {
       })
         .then(res => {
           this.$message.success({
-            content: `删除用户${row.username}成功`,
+            content: `删除用户${row.name}成功`,
             key: 'key'
           });
           this.fetchUserList();
         })
-        .catch(err => {
-          this.$message.error({
-            content: '网络故障，请重试',
-            key: 'key'
-          });
-          throw err;
-        });
     },
     handleEdit (row) {
       const path = `/user/edit/${row.id}`;

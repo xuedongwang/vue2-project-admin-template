@@ -12,8 +12,8 @@
             </a-form-model-item>
             <a-form-model-item :wrapper-col="buttonItemLayout">
               <a-space>
-                <a-button type="primary" :loading="loading" @click="handleSubmit">{{ isEdit ? '更新' : '创建' }}</a-button>
-                <a-button @click="handleResetForm">重置</a-button>
+                <a-button :disabled="isEdit && !isModify" type="primary" :loading="loading" @click="handleSubmit">{{ isEdit ? '更新' : '创建' }}</a-button>
+                <a-button :disabled="isEdit && !isModify" @click="handleResetForm">重置</a-button>
               </a-space>
             </a-form-model-item>
           </a-form-model>
@@ -24,11 +24,16 @@
 </template>
 
 <script>
+import { cloneDeep, isEqual } from 'lodash-es';
 export default {
   data () {
     return {
       loading: false,
       form: {
+        name: '',
+        description: ''
+      },
+      bakForm: {
         name: '',
         description: ''
       },
@@ -42,16 +47,19 @@ export default {
       },
       rules: {
         name: [
-          { required: true, message: '请输入文章标题', trigger: 'blur' },
-          { min: 1, max: 50, message: '文章标题长度为1-50', trigger: 'blur' }
+          { required: true, message: '请输入分类名', trigger: 'blur' },
+          { min: 1, max: 50, message: '分类名长度为1-50', trigger: 'blur' }
         ],
         description: [
-          { min: 0, max: 500, message: '文章描述长度最长为500', trigger: 'blur' }
+          { min: 0, max: 500, message: '分类描述长度最长为500', trigger: 'blur' }
         ]
       }
     };
   },
   computed: {
+    isModify() {
+      return !isEqual(this.form, this.bakForm);
+    },
     isEdit () {
       return this.$route.path.startsWith('/category/edit/');
     }
@@ -64,25 +72,13 @@ export default {
       const params = {
         id: this.$route.params.id
       };
-      const hide = this.$message.loading({
-        content: '加载中...',
-        duration: 0,
-        key: 'key'
-      });
       $http.get('/category/detail', {
         params
       })
         .then(res => {
-          hide();
-          this.form.name = res.data.title;
+          this.form.name = res.data.name;
           this.form.description = res.data.description;
-        })
-        .catch(err => {
-          this.$message.error({
-            content: '网络故障，请重试',
-            key: 'key'
-          });
-          throw err;
+          this.bakForm = cloneDeep(this.form);
         });
     },
     createCategory () {
@@ -92,20 +88,14 @@ export default {
       this.loading = true;
       $http.post('/category/create', data)
         .then(res => {
-          this.loading = false;
           this.$message.success({
             content: '创建分类成功',
             key: 'key'
           });
           this.$router.back();
         })
-        .catch(err => {
+        .finally(() => {
           this.loading = false;
-          this.$message.error({
-            content: '网络故障，请重试',
-            key: 'key'
-          });
-          throw err;
         });
     },
     updateCategory () {
@@ -115,28 +105,22 @@ export default {
       };
       this.loading = true;
       $http.post('/category/update', data)
-        .then(res => {
-          this.loading = false;
+        .then(() => {
           this.$message.success({
             content: '更新分类成功',
             key: 'key'
           });
-          this.$router.back();
+          this.bakForm = cloneDeep(this.form)
         })
-        .catch(err => {
+        .finally(() => {
           this.loading = false;
-          this.$message.error({
-            content: '网络故障，请重试',
-            key: 'key'
-          });
-          throw err;
         });
     },
     handleSubmit () {
       this.isEdit ? this.updateCategory() : this.createCategory();
     },
     handleResetForm () {
-      this.$refs.categoryForm.resetFields();
+      this.form = cloneDeep(this.bakForm);
     }
   }
 };

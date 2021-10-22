@@ -14,7 +14,7 @@
             </a-tag>
           </template>
           <template slot="extra">
-            <a-button key="2">保存</a-button>
+            <a-button key="2" @click="handleSave">保存</a-button>
             <a-button key="1" type="primary" @click="drawVisiable=true">发布</a-button>
           </template>
         </a-page-header>
@@ -25,6 +25,8 @@
         <rich-editor
           :title.sync="form.title"
           v-model="form.content"
+          ref="richEditorRef"
+          v-if="!loading"
         ></rich-editor>
       </a-col>
     </a-row>
@@ -49,20 +51,20 @@
         </a-form-model-item>
         <a-form-model-item label="文章分类" prop="category">
           <a-select v-model="form.category">
-            <a-select-option :value="tag.value" v-for="tag of userCategories" :key="tag.name">{{ tag.name }}</a-select-option>
+            <a-select-option :value="category.id" v-for="category of userCategories" :key="category.id">{{ category.name }}</a-select-option>
           </a-select>
         </a-form-model-item>
         <a-form-model-item label="文章标签" prop="tags">
           <a-select v-model="form.tags" :allowClear="true" mode="tags">
-            <a-select-option :value="tag.value" v-for="tag of defaultTags" :key="tag.name">{{ tag.name }}</a-select-option>
+            <a-select-option :value="tag.name" v-for="tag of defaultTags" :key="tag.id">{{ tag.name }}</a-select-option>
           </a-select>
         </a-form-model-item>
         <a-form-model-item label="定时发布">
-          <a-switch v-model="form.isTimedRelease" />
+          <a-switch v-model="form.isTimedSend" />
         </a-form-model-item>
-        <a-form-model-item label="定时发布时间" v-if="form.isTimedRelease" required prop="timedReleaseDate">
+        <a-form-model-item label="定时发布时间" v-if="form.isTimedSend" required prop="timedSendDate">
           <a-date-picker
-            v-model="form.timedReleaseDate"
+            v-model="form.timedSendDate"
             show-time
             type="date"
             style="width: 100%;"
@@ -74,9 +76,6 @@
         <a-form-model-item label="是否原创">
           <a-switch v-model="form.isOriginal" />
         </a-form-model-item>
-        <a-form-model-item label="允许评论">
-          <a-switch v-model="form.isAllowComment" />
-        </a-form-model-item>
         <template v-if="!form.isOriginal">
           <a-form-model-item label="原创作者" prop="originalAuthor">
             <a-input v-model="form.originalAuthor"/>
@@ -85,6 +84,9 @@
             <a-input v-model="form.originalLink"/>
           </a-form-model-item>
         </template>
+        <a-form-model-item label="允许评论">
+          <a-switch v-model="form.isAllowComment" />
+        </a-form-model-item>
         <a-form-model-item :wrapper-col="buttonItemLayout">
           <a-space>
             <a-button type="primary" @click="handlePublish">发布</a-button>
@@ -97,6 +99,7 @@
 </template>
 
 <script>
+import { titleMixin } from '@/mixins';
 import RichEditor from '@/components/rich-editor';
 const formRules = {
   title: [
@@ -108,56 +111,48 @@ const formRules = {
   ],
   category: [{ required: true, message: '每篇文章必须有一个分类', trigger: 'blur' }],
   tags: [{ required: true, message: '每篇文章至少有一个标签', trigger: 'change' }],
-  timedReleaseDate: [{ required: true, message: '定时发送时，定时发送的时间必选', trigger: 'change' }],
+  timedSendDate: [{ required: true, message: '定时发送时，定时发送的时间必选', trigger: 'change' }],
   originalAuthor: [{ required: true, message: '非原创文章，原创作者必填', trigger: 'change' }],
   originalLink: [{ required: true, message: '非原创文章，原创链接必填', trigger: 'change' }]
 };
-const DEFAULT_TAGS = [
-  {
-    name: 'HTML',
-    value: 'html'
-  },
-  {
-    name: 'CSS',
-    value: 'css'
-  },
-  {
-    name: 'JavaScript',
-    value: 'javascript'
-  }
-];
 export default {
+  mixins: [titleMixin],
+  title () {
+    return this.isEdit ? '编辑文章' : '创建文章';
+  },
   components: {
     RichEditor
   },
   computed: {
     isEdit () {
       return this.$route.path.includes('/article/edit');
+    },
+    articleId() {
+      return this.$route.params.id
     }
   },
   watch: {
     form: {
       handler ({ title, content }) {
         console.log(content);
-        localStorage.setItem('content', content);
-        localStorage.setItem('title', title);
       },
       deep: true
     }
   },
   data () {
     return {
+      loading: false,
       drawVisiable: false,
-      defaultTags: DEFAULT_TAGS,
-      userCategories: DEFAULT_TAGS,
+      defaultTags: [],
+      userCategories: [],
       form: {
-        title: localStorage.getItem('title') ?? '',
-        content: localStorage.getItem('content') ?? '',
+        title: '',
+        content: '',
         description: '',
         category: '',
         tags: [],
-        isTimedRelease: false,
-        timedReleaseDate: '',
+        isTimedSend: false,
+        timedSendDate: '',
         isPrivate: false,
         isOriginal: true,
         originalAuthor: '',
@@ -175,18 +170,79 @@ export default {
       }
     };
   },
-  title () {
-    return '';
+  mounted() {
+    this.fetchCategoryList();
+    this.fetchTagList();
+    this.fetchArticleDetail();
   },
   methods: {
+    fetchArticleDetail() {
+      this.loading = true;
+      const params = {
+        id: this.articleId
+      };
+      $http.get('/article/detail', {
+        params
+      })
+        .then(res => {
+          this.form.title = res.data.title;
+          this.form.description = res.data.description;
+          this.form.content = res.data.content;
+          this.form.category = res.data.category;
+          this.form.tags = res.data.tags;
+          this.form.isAllowComment = res.data.isAllowComment;
+          this.form.isOriginal = res.data.isOriginal;
+          this.form.isPrivate = res.data.isPrivate;
+          this.form.isTimedSend = res.data.isTimedSend;
+          this.form.timedSendDate = res.data.timedSendDate;
+        })
+        .finally(() => {
+          this.loading = false;
+        });
+    },
     handleDrawerClose () {
       this.drawVisiable = false;
+    },
+    fetchTagList () {
+      const params = {};
+      $http.get('/tag/list', {
+        params
+      })
+        .then(res => {
+          this.defaultTags = res.data.list;
+        });
+    },
+    fetchCategoryList () {
+      const params = {};
+      $http.get('/category/list', {
+        params
+      })
+        .then(res => {
+          this.userCategories = res.data.list;
+        });
+    },
+    saveArticle(isPublish) {
+      const data = {
+        ...this.form,
+        id: this.articleId,
+        isPublish
+      }
+      $http.post('/article/save', data)
+        .then(res => {
+          this.$message.success(this.isPublish ? '发布成功' : '保存成功')
+            .then(() => {
+              this.$router.back();
+            })
+          
+        });
+    },
+    handleSave() {
+      this.saveArticle(false);
     },
     handlePublish () {
       this.$refs.publishForm.validate(valid => {
         if (valid) {
-          console.log(this.form);
-          // alert('submit!');
+          this.saveArticle(true);
         } else {
           console.log('error submit!!');
           return false;

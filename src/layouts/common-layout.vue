@@ -1,6 +1,6 @@
 <template>
   <a-layout class="common-layout">
-    <a-layout-sider v-model="collapsed" :theme="menu.theme" :trigger="null" collapsible>
+    <a-layout-sider class="aside" v-model="collapsed" :theme="menu.theme" :trigger="null" collapsible>
       <a-menu @select="handleMenuSelect" v-model="currentMenu" :theme="menu.theme" mode="inline">
         <template v-for="menuItem of menu.list" >
           <a-sub-menu :key="menuItem.key" v-if="menuItem.children && menuItem.children.length > 0">
@@ -119,6 +119,13 @@ export default {
 <style lang="scss" scoped>
 .common-layout {
   height: 100vh;
+  .aside {
+    /deep/ {
+      .ant-layout-sider-children {
+        overflow-y: auto;
+      }
+    }
+  }
   .header {
     display: flex;
     align-items: center;
