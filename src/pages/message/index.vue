@@ -64,9 +64,9 @@
                     {{ message.dislikes }}
                   </span>
                 </span>
-                <span key="comment-basic-reply-to" @click="handleReplay(message)">回复</span>
+                <span v-if="!message.isDelete" key="comment-basic-reply-to" @click="handleReplay(message)">回复</span>
                 <span key="comment-delete" @click="handleDelete(message)">删除</span>
-                <span key="comment-approved" @click="handleApproved(message)">展示</span>
+                <span v-if="!message.isDelete && message.type === 'moderated'" key="comment-approved" @click="handleApproved(message)">审核通过</span>
               </template>
               <a slot="author">{{ message.name }}</a>
               <a-avatar
@@ -246,7 +246,8 @@ export default {
     },
     handleDelete({ id }) {
       const params = {
-        id
+        id,
+        type: this.type
       }
       $http.get('/message/delete', {
         params
