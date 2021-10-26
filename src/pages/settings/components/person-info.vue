@@ -30,7 +30,7 @@
           </a-select>
         </a-form-model-item>
         <a-form-model-item>
-          <a-button type="primary" @click="handleUpdateUserinfo">更新信息</a-button>
+          <a-button type="primary" :loading="loading" @click="handleUpdateUserinfo">更新信息</a-button>
         </a-form-model-item>
       </a-form-model>
     </div>
@@ -60,7 +60,7 @@ export default {
         description: '',
         language: ''
       },
-      headers: {},
+      loading: false,
       accept: typeMap.picture
     };
   },
@@ -84,6 +84,7 @@ export default {
         })
     },
     handleUpdateUserinfo () {
+      this.loading = true;
       const data = {
         name: this.profileForm.name,
         avatar: this.profileForm.avatar,
@@ -94,6 +95,9 @@ export default {
       $http.post('/user/update_info', data)
         .then(res => {
           this.$store.dispatch('user/fetchUserinfo');
+        })
+        .finally(() => {
+          this.loading = false;
         })
     }
   }
