@@ -3,23 +3,31 @@
     <div class="card-body">
       <a-form-model layout="vertical" :model="profileForm">
         <a-form-model-item label="头像">
-          <a-upload
-            name="file"
-            action="https://www.mocky.io/v2/5cc8019d300000980a055e76"
-            :headers="headers"
-            @change="handleChange"
+          <a-avatar class="avatar" :size="64" :src="profileForm.avatar | autoPrefix" @click="$refs.uploadAvatarInputRef.click()" icon="user" />
+          <input
+            type="file"
+            ref="uploadAvatarInputRef"
+            :multiple="false"
+            v-show="false"
+            :accept="accept"
+            @change="handleFileChange"
           >
-            <a-avatar :size="64" :src="profileForm.avatar" icon="user" />
-          </a-upload>
         </a-form-model-item>
         <a-form-model-item label="昵称">
           <a-input v-model="profileForm.name"/>
         </a-form-model-item>
         <a-form-model-item label="简介">
-          <a-input type="textarea" :autosize="{ minRows: 3, maxRows: 6 }" v-model="profileForm.description"/>
+          <a-input type="textarea" :autoSize="{ minRows: 3, maxRows: 6 }" v-model="profileForm.description"/>
         </a-form-model-item>
-        <a-form-model-item label="地址">
-          <a-input v-model="profileForm.address"/>
+        <a-form-model-item label="语言">
+          <a-select v-model="profileForm.language">
+            <a-select-option value="English">
+              English
+            </a-select-option>
+            <a-select-option value="Chinese">
+              简体中文
+            </a-select-option>
+          </a-select>
         </a-form-model-item>
         <a-form-model-item>
           <a-button type="primary" @click="handleUpdateUserinfo">更新信息</a-button>
@@ -31,29 +39,69 @@
 
 <script>
 import { cloneDeep } from 'lodash-es';
+import { titleMixin } from '@/mixins';
+const typeMap = {
+  pdf: ['application/pdf'],
+  picture: ['image/gif', 'image/png', 'image/jpeg', 'image/bmp', 'image/webp', 'image/x-icon', 'image/vnd.microsoft.icon'],
+  audio: ['audio/midi', 'audio/mpeg', 'audio/webm', 'audio/ogg', 'audio/wav'],
+  video: ['video/webm', 'video/ogg'],
+  zip: ['application/zip']
+};
 export default {
+  mixins: [titleMixin],
+  title() {
+    return '个人信息'
+  },
   data () {
     return {
       profileForm: {
+        avatar: '',
         name: '',
         description: '',
-        address: ''
+        language: ''
       },
-      headers: {}
+      headers: {},
+      accept: typeMap.picture
     };
   },
   created () {
     this.profileForm = cloneDeep(this.$store.state.user.info || {});
   },
   methods: {
-    handleChange () {},
+    handleFileChange(e) {
+      const { files } = e.target;
+      const hide = this.$message.loading({
+        content: `正在上传头像`,
+        duration: 0,
+      })
+      $upload({ file: files[0], userConfig: {showLoadingMsg: false}})
+        .then(res => {
+          this.profileForm.avatar = res.data.url;
+        })
+        .finally(() => {
+          e.target.value = '';
+          hide();
+        })
+    },
     handleUpdateUserinfo () {
-      this.$store.dispatch('user/fetchUserinfo');
+      const data = {
+        name: this.profileForm.name,
+        avatar: this.profileForm.avatar,
+        language: this.profileForm.language,
+        description: this.profileForm.description,
+        id: this.$store.state.user.info.id
+      };
+      $http.post('/user/update_info', data)
+        .then(res => {
+          this.$store.dispatch('user/fetchUserinfo');
+        })
     }
   }
 };
 </script>
 
-<style>
-
+<style lang="scss">
+.avatar {
+  cursor: pointer;
+}
 </style>

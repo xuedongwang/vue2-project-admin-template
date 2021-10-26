@@ -2,7 +2,7 @@
   <div class="category">
     <a-row>
       <a-col :span="24">
-        <a-card title="创建分类" :bordered="false">
+        <a-card :title="isEdit ? '编辑分类' : '创建分类'" :bordered="false">
           <a-form-model ref="categoryForm" v-bind="formItemLayout" :rules="rules" :model="form">
             <a-form-model-item label="分类名" prop="name">
               <a-input v-model="form.name" />
@@ -24,8 +24,21 @@
 </template>
 
 <script>
+import { breadcrumbMixin, titleMixin } from '@/mixins';
 import { cloneDeep, isEqual } from 'lodash-es';
 export default {
+  mixins: [breadcrumbMixin, titleMixin],
+  title() {
+    return this.isEdit ? '编辑分类' : '创建分类'
+  },
+  breadcrumb() {
+    return [{
+      title: '分类管理',
+      path: '/category/manage'
+    }, {
+      title: this.isEdit ? '编辑分类' : '创建分类',
+    }]
+  },
   data () {
     return {
       loading: false,

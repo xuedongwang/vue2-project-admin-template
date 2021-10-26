@@ -30,7 +30,7 @@
           <span class="username">{{ user.name }}</span>
           <a-tag color="blue">管理员</a-tag>
           <a-dropdown :trigger="['click']">
-            <a-avatar size="large" :src="user.avatar" icon="user" class="pointer" />
+            <a-avatar size="large" :src="user.avatar | autoPrefix" icon="user" class="pointer" />
             <a-menu slot="overlay">
               <template v-for="(item, index) of avatarDropDownMenuList">
                 <a-menu-item :key="index" v-if="item.type === 'link'">
@@ -104,7 +104,7 @@ export default {
       this.$router.push(path);
     },
     setPathFromRoute (route) {
-      this.currentMenu = [route.path];
+      this.currentMenu = [route.meta.activeMenu || route.path];
     }
   },
   created () {

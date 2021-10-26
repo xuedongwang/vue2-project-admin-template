@@ -23,7 +23,8 @@ const routes = [
     component: () => import('../pages/message'),
     meta: {
       layout: 'CommonLayout',
-      needLogin: true
+      needLogin: true,
+      activeMenu: '/message/moderated'
     }
   },
   {
@@ -41,7 +42,8 @@ const routes = [
     component: () => import('../pages/settings'),
     meta: {
       layout: 'CommonLayout',
-      needLogin: true
+      needLogin: true,
+      activeMenu: '/settings/profile'
     }
   },
   {
@@ -69,7 +71,8 @@ const routes = [
     component: () => import('../pages/category/create'),
     meta: {
       layout: 'CommonLayout',
-      needLogin: true
+      needLogin: true,
+      activeMenu: '/category/manage'
     }
   },
   {
@@ -107,7 +110,8 @@ const routes = [
     component: () => import('../pages/user/create'),
     meta: {
       layout: 'CommonLayout',
-      needLogin: true
+      needLogin: true,
+      activeMenu: '/user/manage'
     }
   },
   {

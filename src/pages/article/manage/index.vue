@@ -23,7 +23,7 @@
               </a-select>
             </a-form-model-item>
             <a-form-model-item label="分类">
-              <a-select allowClear v-model="filterForm.category" style="width:178px;">
+              <a-select allowClear showSearch v-model="filterForm.category" style="width:178px;">
                 <a-select-option v-for="item of userCategories" :key="item.id" :value="item.id">{{ item.name }}</a-select-option>
               </a-select>
             </a-form-model-item>
@@ -44,7 +44,7 @@
     <a-row style="margin-top:10px;">
       <a-col :span="24">
         <a-card :bordered="false">
-          <a-table :scroll="{ x: 1500, y: 300 }" @change="handleTableChange" :pagination="pagination" rowKey="id" :columns="columns" :data-source="article.list" bordered>
+          <a-table :scroll="{ x: 1500}" @change="handleTableChange" :pagination="pagination" rowKey="id" :columns="columns" :data-source="article.list" bordered>
             <p slot="expandedRowRender" slot-scope="record" style="margin: 0">
               {{ record.description | formatString }}
             </p>
@@ -85,7 +85,7 @@
             </template>
             <template slot="operation" slot-scope="text,row">
               <div class="row-operations">
-                <a @click="() => handleEdit(row)">编辑</a>
+                <text-button @click="() => handleEdit(row)">编辑</text-button>
                 <a-popconfirm
                   ok-text="删除"
                   cancel-text="取消"
@@ -93,10 +93,10 @@
                   @confirm="handleDelete(row)"
                 >
                   <template slot="title">
-                    <p>确定删除{{ currentArticle.title }}文章吗？</p>
+                    <p>确定删除{{ row.title }}文章吗？</p>
                     <p>删除后不可恢复</p>
                   </template>
-                  <a style="color:#f5222d" @click="() => currentArticle=row">删除</a>
+                  <text-button type="danger">删除</text-button>
                 </a-popconfirm>
               </div>
             </template>
@@ -113,7 +113,6 @@ const columns = [
   {
     title: '标题',
     dataIndex: 'title',
-    width: '200px',
     scopedSlots: { customRender: 'articleTitle' },
     ellipsis: true
   },
@@ -203,7 +202,6 @@ export default {
         total: 0,
         showTotal: (total) => `共${total}条`
       },
-      currentArticle: {},
       userCategories: []
     };
   },
@@ -229,14 +227,14 @@ export default {
     },
     fetchArticleList () {
       const params = {
-        ...this.filterForm,
-        currentPage: this.pagination.current,
-        pageSize: this.pagination.pageSize
+        title: this.filterForm.title ?? '',
+        isPublish: this.filterForm.isPublish ?? '',
+        category: this.filterForm.category ?? '',
+        currentPage: this.pagination.current ?? 1,
+        pageSize: this.pagination.pageSize ?? 10
       };
       $http.get('/article/list', {
-        params,
-        currentPage: this.pagination.current,
-        pageSize: this.pagination.pageSize
+        params
       })
         .then(res => {
           this.article.list = res.data.list;
@@ -244,7 +242,10 @@ export default {
         })
     },
     fetchCategoryList () {
-      const params = {};
+      const params = {
+        currentPage: 1,
+        pageSize: 9999
+      };
       $http.get('/category/list', {
         params
       })

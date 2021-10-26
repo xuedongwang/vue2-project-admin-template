@@ -33,7 +33,7 @@
     <a-row style="margin-top:10px;">
       <a-col :span="24">
         <a-card :bordered="false">
-          <a-table :scroll="{ x: 1500, y: 300 }" @change="handleTableChange" :pagination="pagination" rowKey="id" :columns="columns" :data-source="user.list" bordered>
+          <a-table :scroll="{ x: 1500}" @change="handleTableChange" :pagination="pagination" rowKey="id" :columns="columns" :data-source="userList" bordered>
             <p slot="expandedRowRender" slot-scope="record" style="margin: 0">
               {{ record.description }}
             </p>
@@ -51,9 +51,9 @@
               <a-tag color="green" v-if="role === 'admin'">管理员</a-tag>
               <a-tag color="orange" v-else>成员</a-tag>
             </template>
-            <template slot="status" slot-scope="status">
-              <a-tag color="green" v-if="status === 1">正常</a-tag>
-              <a-tag color="orange" v-else>冻结</a-tag>
+            <template slot="isBan" slot-scope="isBan">
+              <a-tag color="orange" v-if="isBan">停用</a-tag>
+              <a-tag color="green" v-else>正常</a-tag>
             </template>
             <template slot="createdAt" slot-scope="createdAt">
               {{ createdAt | dayjs('YYYY年MM月DD日 hh:mm:ss') }}
@@ -63,17 +63,56 @@
             </template>
             <template slot="operation" slot-scope="text,row">
               <div class="row-operations">
-                <a @click="() => handleEdit(row)">编辑</a>
-                <a-popconfirm
-                  placement="topRight"
-                  okType="danger"
-                  :title="`确定要删除用户${row.name}?删除后不可恢复`"
-                  ok-text="删除"
-                  cancel-text="取消"
-                  @confirm="handleDelete(row)"
+                <template v-if="row.role === 'admin'">
+                  <a-tooltip placement="topRight">
+                    <template slot="title">
+                      <span>管理员不能被停用</span>
+                    </template>
+                    <text-button :disabled="true" @click="() => handleToggleBanUser(row)">停用</text-button>
+                  </a-tooltip>
+                  <a-tooltip placement="topRight">
+                    <template slot="title">
+                      <span>管理员不能被删除</span>
+                    </template>
+                    <text-button :disabled="true" type="danger">删除</text-button>
+                  </a-tooltip>
+                </template>
+                <template
+                  v-else
                 >
-                  <a style="color:#f5222d">删除</a>
-                </a-popconfirm>
+                  <a-popconfirm
+                    placement="topRight"
+                    okType="danger"
+                    ok-text="停用"
+                    cancel-text="取消"
+                    @confirm="handleToggleBanUser(row)"
+                  >
+                    <template slot="title">
+                      <template v-if="row.isBan">
+                        <div>确定要启用用户<a-tag color="green">{{row.name}}</a-tag>?</div>
+                        <div>启用后该用户可以正常登录</div>
+                      </template>
+                      <template v-else>
+                        <div>确定要停用用户<a-tag color="orange">{{row.name}}</a-tag>?</div>
+                        <div>停用后后该用户不能登录</div>
+                      </template>
+                    </template>
+                    <text-button>{{ row.isBan ? '启用' : '停用' }}</text-button>
+                  </a-popconfirm>
+                  <a-popconfirm
+                    placement="topRight"
+                    okType="danger"
+                    ok-text="删除"
+                    cancel-text="取消"
+                    @confirm="handleDelete(row)"
+                  >
+                    <template slot="title">
+                      <div>确定要删除用户<a-tag color="red">{{row.name}}</a-tag>?</div>
+                      <div>删除后不可恢复</div>
+                    </template>
+                    <text-button type="danger">删除</text-button>
+                  </a-popconfirm>
+                </template>
               </div>
             </template>
           </a-table>
@@ -84,6 +123,7 @@
 </template>
 
 <script>
+import { titleMixin } from '@/mixins';
 const columns = [
   {
     title: '用户名',
@@ -111,6 +151,12 @@ const columns = [
     scopedSlots: { customRender: 'role' }
   },
   {
+    title: '状态',
+    width: '100px',
+    dataIndex: 'isBan',
+    scopedSlots: { customRender: 'isBan' }
+  },
+  {
     title: '文章数',
     width: '100px',
     dataIndex: 'articleCount'
@@ -119,12 +165,6 @@ const columns = [
     title: '分类数',
     width: '100px',
     dataIndex: 'categoryCount'
-  },
-  {
-    title: '状态',
-    width: '100px',
-    dataIndex: 'status',
-    scopedSlots: { customRender: 'status' }
   },
   {
     title: '创建时间',
@@ -147,13 +187,11 @@ const columns = [
   }
 ];
 export default {
+  mixins: [titleMixin],
+  title: '用户管理',
   data () {
     return {
-      name: '文章管理',
-      user: {
-        list: [],
-        total: 0
-      },
+      userList: [],
       filterForm: {
         name: '',
       },
@@ -168,15 +206,14 @@ export default {
       }
     };
   },
-  title () {
-    return this.name;
-  },
   mounted () {
     this.fetchUserList();
   },
   methods: {
-    handleTableChange (args) {
-      console.log(args);
+    handleTableChange ({ current, pageSize }) {
+      this.pagination.current = current;
+      this.pagination.pageSize = pageSize;
+      this.fetchUserList();
     },
     resetCurrentPage() {
       this.pagination.current = 1;
@@ -195,7 +232,7 @@ export default {
         params
       })
         .then(res => {
-          this.user.list = res.data.list;
+          this.userList = res.data.list;
           this.pagination.total = res.data.total;
         })
     },
@@ -214,9 +251,21 @@ export default {
           this.fetchUserList();
         })
     },
-    handleEdit (row) {
-      const path = `/user/edit/${row.id}`;
-      this.$router.push(path);
+    handleToggleBanUser (row) {
+      const params = {
+        id: row.id,
+        isBan: row.isBan ? 0 : 1
+      };
+      $http.get('/user/toggle_ban', {
+        params
+      })
+        .then(() => {
+          this.$message.success({
+            content: `${row.isBan ? '启用' : '停用'}用户${row.name}成功`,
+            key: 'key'
+          });
+          this.fetchUserList();
+        })
     },
     handleCreateUser () {
       this.$router.push({

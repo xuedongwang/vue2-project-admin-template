@@ -14,7 +14,7 @@
             </a-radio-button>
           </a-radio-group>
           <!-- 搜索 -->
-          <a-form-model slot="extra" layout="inline" :model="searchForm" @submit="handleSearch" @submit.native.prevent>
+          <!-- <a-form-model slot="extra" layout="inline" :model="searchForm" @submit="handleSearch" @submit.native.prevent>
             <a-form-model-item>
               <a-input v-model="searchForm.user" placeholder=""></a-input>
             </a-form-model-item>
@@ -28,7 +28,7 @@
               </a-button>
               <a-button @click="handleCreate">创建测试留言</a-button>
             </a-form-model-item>
-          </a-form-model>
+          </a-form-model> -->
         </a-card>
       </a-col>
     </a-row>
@@ -43,9 +43,12 @@
             </div>
           </div>
           <div class="card-body">
+            <div style="margin-top:10px;" v-if="message.list.length === 0">
+              暂无评论
+            </div>
             <a-comment v-for="message of message.list" :key="message.id">
               <template slot="actions">
-                <span key="comment-basic-like">
+                <!-- <span key="comment-basic-like">
                   <a-tooltip title="Like">
                     <a-icon type="like" :theme="action === 'liked' ? 'filled' : 'outlined'" />
                   </a-tooltip>
@@ -63,7 +66,7 @@
                   <span style="padding-left: '8px';cursor: 'auto'">
                     {{ message.dislikes }}
                   </span>
-                </span>
+                </span> -->
                 <span v-if="!message.isDelete" key="comment-basic-reply-to" @click="handleReplay(message)">回复</span>
                 <span key="comment-delete" @click="handleDelete(message)">删除</span>
                 <span v-if="!message.isDelete && message.type === 'moderated'" key="comment-approved" @click="handleApproved(message)">审核通过</span>
@@ -87,7 +90,7 @@
                 </a-comment>
               </template>
               <a-tooltip slot="datetime" :title="message.createdAt">
-                <span>{{ message.createdAt }}</span>
+                <span>{{ message.createdAt | dayjs }}</span>
               </a-tooltip>
             </a-comment>
           </div>
@@ -132,9 +135,6 @@ export default {
   data () {
     return {
       messageTypeList: [{
-        type: 'all',
-        name: '全部'
-      }, {
         type: 'moderated',
         name: '待审'
       }, {
@@ -145,7 +145,6 @@ export default {
         name: '回收站'
       }],
       messageTypeMap: {
-        all: 0,
         moderated: 0,
         approved: 0,
         trash: 0
@@ -226,7 +225,6 @@ export default {
       })
         .then(res => {
           this.message = res.data;
-          this.messageTypeMap.all = res.data.all;
           this.messageTypeMap.moderated = res.data.moderated;
           this.messageTypeMap.approved = res.data.approved;
           this.messageTypeMap.trash = res.data.trash;
@@ -264,7 +262,6 @@ export default {
         this.visible = false;
       }, 1000);
     },
-    handleCancel () {},
     handleReplay (message) {
       this.currentMessage = message;
       this.visible = true;

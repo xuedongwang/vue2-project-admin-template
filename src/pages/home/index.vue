@@ -5,9 +5,9 @@
         <a-card  :bordered="false">
           <a-statistic
             title="文章"
-            :value="statistics.articleCount"
             suffix="篇"
           >
+            <count-to slot="formatter" :startVal="0" :endVal="statistics.articleCount" :duration="1000"></count-to>
           </a-statistic>
         </a-card>
       </a-col>
@@ -15,9 +15,9 @@
         <a-card  :bordered="false">
           <a-statistic
             title="分类"
-            :value="statistics.categoryCount"
             suffix="个"
           >
+            <count-to slot="formatter" :startVal="0" :endVal="statistics.categoryCount" :duration="1000"></count-to>
           </a-statistic>
         </a-card>
       </a-col>
@@ -25,9 +25,9 @@
         <a-card  :bordered="false">
           <a-statistic
             title="留言"
-            :value="statistics.commentCount"
             suffix="条"
           >
+            <count-to slot="formatter" :startVal="0" :endVal="statistics.commentCount" :duration="1000"></count-to>
           </a-statistic>
         </a-card>
       </a-col>
@@ -35,9 +35,10 @@
         <a-card  :bordered="false">
           <a-statistic
             title="用户"
-            :value="statistics.usrCount"
+            :value="statistics.userCount"
             suffix="人"
           >
+            <count-to slot="formatter" :startVal="0" :endVal="statistics.userCount" :duration="1000"></count-to>
           </a-statistic>
         </a-card>
       </a-col>
@@ -46,38 +47,31 @@
 </template>
 
 <script>
+import { titleMixin } from '@/mixins';
 export default {
+  mixins: [titleMixin],
+  title: '主页',
+  name: 'home',
   data () {
     return {
-      name: '主页',
-      statistics: null
+      statistics: {
+        articleCount: 0,
+        categoryCount: 0,
+        commentCount: 0,
+        userCount: 0
+      }
     };
   },
-  title () {
-    return this.name;
-  },
+  
   mounted () {
     this.fetchStatistics();
   },
   methods: {
     fetchStatistics () {
-      const hide = this.$message.loading({
-        content: '加载中...',
-        duration: 0,
-        key: 'key'
-      });
       $http.get('/common/statistics')
         .then(res => {
-          hide();
           this.statistics = res.data;
         })
-        .catch(err => {
-          this.$message.loading({
-            content: '网络故障，请重试',
-            key: 'key'
-          });
-          throw err;
-        });
     }
   }
 };

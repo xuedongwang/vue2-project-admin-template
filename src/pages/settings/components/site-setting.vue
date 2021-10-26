@@ -81,7 +81,12 @@
 
 <script>
 // import { cloneDeep } from 'lodash-es';
+import { titleMixin } from '@/mixins';
 export default {
+  mixins: [titleMixin],
+  title() {
+    return '网站设置'
+  },
   data () {
     return {
       profileForm: {

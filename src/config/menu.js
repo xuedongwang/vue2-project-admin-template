@@ -30,7 +30,7 @@ export default {
       title: '标签管理'
     },
     {
-      key: '/message/all',
+      key: '/message/moderated',
       icon: 'message',
       title: '留言管理'
     },
@@ -48,13 +48,13 @@ export default {
       key: '/page/manage',
       icon: 'file-text',
       title: '页面管理'
-    }
-    // {
-    //   key: 'pay-circle',
-    //   icon: 'pay-circle',
-    //   title: '广告管理',
-    //   disabled: true
-    // },
+    },
+    {
+      key: 'pay-circle',
+      icon: 'pay-circle',
+      title: '广告管理',
+      disabled: true
+    },
     // {
     //   key: 'delete',
     //   icon: 'delete',

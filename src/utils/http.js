@@ -21,6 +21,7 @@ httpInstant.interceptors.request.use(config => {
   if (localStorage.getItem('token')) {
     config.headers.token = localStorage.getItem('token')
   }
+  console.log(config);
   if (config.showLoadingMsg) {
     hide = message.loading({
       content: config.loadingMsg,
@@ -47,6 +48,7 @@ httpInstant.interceptors.response.use(response => {
   if (code === 0) {
     return response.data;
   } else if (code === -1001) {
+    localStorage.removeItem('token');
     errorMsg('登录过期，请重新登录');
     router.replace('/login');
     return Promise.reject(response);

@@ -36,7 +36,12 @@
 
 <script>
 import { cloneDeep } from 'lodash-es';
+import { titleMixin } from '@/mixins';
 export default {
+  mixins: [titleMixin],
+  title() {
+    return '通知管理'
+  },
   data () {
     return {
       profileForm: {
