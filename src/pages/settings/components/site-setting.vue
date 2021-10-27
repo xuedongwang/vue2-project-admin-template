@@ -1,24 +1,21 @@
 <template>
   <a-card class="card" title="网站设置">
     <div class="card-body">
-      <a-form-model layout="vertical" :model="profileForm">
+      <a-form-model ref="form" layout="vertical" :model="form">
         <a-form-model-item label="站点标题">
-          <a-input v-model="profileForm.name"/>
+          <a-input v-model="form.name"/>
         </a-form-model-item>
         <a-form-model-item label="副标题">
-          <a-input v-model="profileForm.name"/>
+          <a-input v-model="form.subName"/>
         </a-form-model-item>
         <a-form-model-item label="站点描述" help="用简洁的文字描述本站点">
-          <a-input type="textarea" :autosize="{ minRows: 3, maxRows: 6 }" v-model="profileForm.description"/>
+          <a-input type="textarea" :autoSize="{ minRows: 3, maxRows: 6 }" v-model="form.description"/>
         </a-form-model-item>
         <a-form-model-item label="备案号">
-          <a-input v-model="profileForm.address"/>
+          <a-input v-model="form.recordNumber"/>
         </a-form-model-item>
-        <!-- <a-form-model-item label="友情链接">
-          <a-input v-model="profileForm.address"/>
-        </a-form-model-item> -->
         <a-form-model-item
-          v-if="profileForm.domains.length===0"
+          v-if="form.domains.length===0"
           label="友情链接"
         >
           <a-button block type="dashed" @click="addDomain">
@@ -27,25 +24,25 @@
         </a-form-model-item>
         <template v-else>
           <a-form-model-item
-            v-for="(domain, index) in profileForm.domains"
-            :key="domain.key"
+            v-for="(domain, index) in form.domains"
+            :key="index"
             :label="index === 0 ? '友情链接' : ''"
-            :prop="'domains.' + index + '.value'"
+            :prop="'domains.' + index"
             :rules="{
               required: true,
-              message: 'domain can not be null',
+              message: '友情链接不能为空',
               trigger: 'blur',
             }"
           >
             <a-input
-              v-model="domain.value"
+              v-model="form.domains[index]"
               style="width:calc(100% - 30px);margin-right: 6px;"
             />
             <a-icon
-              v-if="profileForm.domains.length > 0"
+              v-if="form.domains.length > 0"
               class="dynamic-delete-button"
               type="minus-circle-o"
-              @click="removeDomain(domain)"
+              @click="removeDomain(index)"
             />
           </a-form-model-item>
 
@@ -56,7 +53,7 @@
           </a-form-model-item>
         </template>
         <a-form-model-item label="站点语言">
-          <a-select v-model="profileForm.region">
+          <a-select v-model="form.language">
             <a-select-option value="shanghai">
               中文
             </a-select-option>
@@ -66,10 +63,10 @@
           </a-select>
         </a-form-model-item>
         <a-form-model-item label="关闭站点" help="关闭网站后，站点将不能被访问">
-          <a-switch v-model="profileForm.delivery" />
+          <a-switch v-model="form.isClosed" />
         </a-form-model-item>
         <a-form-model-item label="禁止搜索隐藏爬取网站" help="搜索引擎将本着自觉自愿的原则对待该设置，并不是所有搜索引擎都会遵守这类设置">
-          <a-switch v-model="profileForm.delivery" />
+          <a-switch v-model="form.isPrivate" />
         </a-form-model-item>
         <a-form-model-item>
           <a-button type="primary" @click="handleUpdateSetting">更新设置</a-button>
@@ -89,30 +86,40 @@ export default {
   },
   data () {
     return {
-      profileForm: {
+      form: {
         domains: [],
         name: '',
+        language: '',
+        isClosed: false,
+        isPrivate: false,
+        subName: '',
         description: '',
-        address: ''
+        recordNumber: ''
       }
     };
   },
   created () {
   },
   methods: {
-    removeDomain (item) {
-      const index = this.profileForm.domains.indexOf(item);
-      if (index !== -1) {
-        this.profileForm.domains.splice(index, 1);
-      }
+    removeDomain (index) {
+      this.form.domains.splice(index, 1);
     },
     addDomain () {
-      this.profileForm.domains.push({
-        value: '',
-        key: Date.now()
-      });
+      this.form.domains.push('');
     },
     handleUpdateSetting () {
+      this.$refs.form.validate(valid => {
+        if (valid) {
+          const data = {
+            ...this.form
+          }
+          $http.post('/site/update_site_setting', data)
+            .then(res => {
+              console.log(res);
+            })
+          console.log(this.form);
+        }
+      })
     }
   }
 };
