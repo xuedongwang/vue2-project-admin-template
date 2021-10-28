@@ -20,46 +20,9 @@ export default {
       title: '分类管理'
     },
     {
-      key: '/user/manage',
-      icon: 'user',
-      title: '用户管理'
-    },
-    {
-      key: '/tag/manage',
-      icon: 'tags',
-      title: '标签管理'
-    },
-    {
-      key: '/message/moderated',
-      icon: 'message',
-      title: '留言管理'
-    },
-    {
-      key: '/source/all',
-      icon: 'folder-open',
-      title: '资源管理'
-    },
-    {
       key: '/settings/profile',
       icon: 'setting',
       title: '网站设置'
     },
-    {
-      key: '/page/manage',
-      icon: 'file-text',
-      title: '页面管理'
-    },
-    {
-      key: 'pay-circle',
-      icon: 'pay-circle',
-      title: '广告管理',
-      disabled: true
-    },
-    // {
-    //   key: 'delete',
-    //   icon: 'delete',
-    //   title: '回收站',
-    //   disabled: true
-    // }
   ]
 };

@@ -1,33 +1,24 @@
 <template>
   <a-card class="card" title="通知管理">
     <div class="card-body">
-      <a-form-model layout="vertical" :model="profileForm">
+      <a-form-model layout="vertical" :model="form">
         <a-form-model-item label="发布文章后接受通知" help="有人发布文章时，邮件将接收到通知">
-          <a-switch v-model="profileForm.delivery" />
-        </a-form-model-item>
-        <a-form-model-item label="异地登录时接受通知" help="异地登录帐号后，邮件将接收到通知">
-          <a-switch v-model="profileForm.delivery" />
-        </a-form-model-item>
-        <a-form-model-item label="有人评论时候接受通知" help="有人评论时候接受通知，邮件将接收到通知">
-          <a-switch v-model="profileForm.delivery" />
-        </a-form-model-item>
-        <a-form-model-item label="添加新成员时接受通知" help="添加新成员时接受通知，邮件将接收到通知">
-          <a-switch v-model="profileForm.delivery" />
-        </a-form-model-item>
-        <a-form-model-item label="成员的权限发生改变时" help="成员的权限发生改变时，邮件将接收到通知">
-          <a-switch v-model="profileForm.delivery" />
+          <a-switch @change="handleChange('publishArticle')" v-model="form.publishArticle" />
         </a-form-model-item>
         <a-form-model-item label="删除文章时接受通知" help="删除文章时接受通知，邮件将接收到通知">
-          <a-switch v-model="profileForm.delivery" />
+          <a-switch @change="handleChange('deleteArticle')" v-model="form.deleteArticle" />
         </a-form-model-item>
-        <a-form-model-item label="有人创建分类时接受通知" help="有人创建分类时接受通知，邮件将接收到通知">
-          <a-switch v-model="profileForm.delivery" />
+        <a-form-model-item label="创建分类时接受通知" help="有人创建分类时接受通知，邮件将接收到通知">
+          <a-switch @change="handleChange('createCategory')" v-model="form.createCategory" />
         </a-form-model-item>
-        <a-form-model-item label="有人创建标签时接受通知" help="有人创建标签时接受通知，邮件将接收到通知">
-          <a-switch v-model="profileForm.delivery" />
+        <a-form-model-item label="删除分类时接受通知" help="有人删除分类时接受通知，邮件将接收到通知">
+          <a-switch @change="handleChange('deleteCategory')" v-model="form.deleteCategory" />
         </a-form-model-item>
-        <a-form-model-item label="有人留言时接受通知" help="有人留言时接受通知，邮件将接收到通知">
-          <a-switch v-model="profileForm.delivery" />
+        <a-form-model-item label="修改密码时接受通知" help="有人修改密码时接受通知，邮件将接收到通知">
+          <a-switch @change="handleChange('changePassword')" v-model="form.changePassword" />
+        </a-form-model-item>
+        <a-form-model-item label="修改安全邮箱时" help="有人修改安全邮箱时，邮件将接收到通知">
+          <a-switch @change="handleChange('changeEmail')" v-model="form.changeEmail" />
         </a-form-model-item>
       </a-form-model>
     </div>
@@ -35,7 +26,6 @@
 </template>
 
 <script>
-import { cloneDeep } from 'lodash-es';
 import { titleMixin } from '@/mixins';
 export default {
   mixins: [titleMixin],
@@ -44,19 +34,38 @@ export default {
   },
   data () {
     return {
-      profileForm: {
-        name: '',
-        description: '',
-        address: ''
+      form: {
+        publishArticle: false,
+        deleteArticle: false,
+        createCategory: false,
+        deleteCategory: false,
+        changePassword: false,
+        changeEmail: false
       }
     };
   },
   created () {
-    this.profileForm = cloneDeep(this.$store.state.user.info || {});
+    this.fetchSetting()
   },
   methods: {
-    handleUpdateUserinfo () {
-      this.$store.dispatch('user/fetchUserinfo');
+    fetchSetting(args) {
+      $http.get('/common/notify_setting')
+        .then(res => {
+          this.form = res.data;
+        })
+    },
+    handleChange(args) {
+      const data = {
+        [args]: this.form[args]
+      };
+      $http.post('/common/toggle_notify', data)
+        .then(res => {
+          console.log(res);
+        })
+        .catch(err => {
+          this.form[args] = !this.form[args];
+          throw err;
+        })
     }
   }
 };

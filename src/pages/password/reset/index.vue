@@ -8,31 +8,31 @@
           <a-step title="修改成功" />
         </a-steps>
         <a-form-model ref="loginForm" v-if="current===1" :rules="rules" :layout="formLayout" :model="form" v-bind="formItemLayout">
-          <a-form-model-item label="安全邮箱" prop="account">
-            <a-input v-model="form.account" placeholder="请输入帐号">
-              <span slot="addonAfter">获取验证码</span>
+          <a-form-model-item label="安全邮箱" prop="email">
+            <a-input v-model="form.email" placeholder="请输入帐号">
+              <span slot="addonAfter" @click="getCaptcha">获取验证码</span>
             </a-input>
           </a-form-model-item>
-          <a-form-model-item label="验证码" prop="password">
-            <a-input v-model="form.password" placeholder="请输入密码" />
+          <a-form-model-item label="验证码" prop="captcha">
+            <a-input v-model="form.captcha" placeholder="请输入密码" />
           </a-form-model-item>
           <a-form-model-item :wrapper-col="buttonItemLayout">
             <a-space>
-              <a-button type="primary" @click="current = 2" :loading="loginLoading">验证帐号</a-button>
+              <a-button type="primary" @click="handleValidateEmail" :loading="loginLoading">验证帐号</a-button>
               <a-button @click="$router.push({name: 'login'})">返回登录</a-button>
             </a-space>
           </a-form-model-item>
         </a-form-model>
-        <a-form-model ref="loginForm" v-if="current===2" :rules="rules" :layout="formLayout" :model="form" v-bind="formItemLayout">
+        <a-form-model ref="loginForm" v-if="current===2" :rules="rules" :layout="formLayout" :model="passwordform" v-bind="formItemLayout">
           <a-form-model-item label="新密码" prop="password">
-            <a-input-password v-model="form.password" placeholder="请输入密码" />
+            <a-input-password v-model="passwordform.password" placeholder="请输入密码" />
           </a-form-model-item>
           <a-form-model-item label="重复新密码" prop="password">
-            <a-input-password v-model="form.password" placeholder="请输入密码" />
+            <a-input-password v-model="passwordform.confirmPassword" placeholder="请输入密码" />
           </a-form-model-item>
           <a-form-model-item :wrapper-col="buttonItemLayout">
             <a-space>
-              <a-button type="primary" @click="current = 3" :loading="loginLoading">修改密码</a-button>
+              <a-button type="primary" @click="handleChangePassword" :loading="loginLoading">修改密码</a-button>
               <a-button @click="current = 1">上一步</a-button>
             </a-space>
           </a-form-model-item>
@@ -58,10 +58,14 @@ export default {
   name: 'password-reset',
   data () {
     return {
+      passwordform: {
+        password: '',
+        confirmPassword: ''
+      },
       current: 1,
       form: {
-        account: '',
-        password: ''
+        email: '',
+        captcha: ''
       },
       loginLoading: false,
       formLayout: 'horizontal',
@@ -74,7 +78,7 @@ export default {
         offset: 4
       },
       rules: {
-        account: [
+        email: [
           { required: true, message: '请输入帐号', trigger: 'blur' },
           { min: 4, max: 20, message: '帐号长度为4-20', trigger: 'blur' }
         ],
@@ -86,6 +90,38 @@ export default {
     };
   },
   methods: {
+    getCaptcha() {
+      const params = {
+        email: this.form.email
+      }
+      $http.get('common/get_captcha', {
+        params
+      })
+        .then(res => {
+          this.$message.success('发送验证码成功')
+        })
+    },
+    handleChangePassword() {
+      const data = {
+        password: this.passwordForm.password,
+        confirmPassword: this.passwordForm.confirmPassword,
+        oldCaptcha: this.form.captcha
+      }
+      $http.post('/common/change_password', data)
+        .then(res => {
+          this.step = 3;
+        })
+    },
+   handleValidateEmail () {
+      const data = {
+        email: this.form.email,
+        captcha: this.form.captcha
+      };
+      $http.post('/common/validate_email', data)
+        .then(res => {
+          this.step = 2;
+        })
+    },
     handleLogin () {
       this.$refs.loginForm.validate(valid => {
         if (valid) {

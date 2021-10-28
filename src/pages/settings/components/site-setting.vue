@@ -3,10 +3,10 @@
     <div class="card-body">
       <a-form-model ref="form" layout="vertical" :model="form">
         <a-form-model-item label="站点标题">
-          <a-input v-model="form.name"/>
+          <a-input v-model="form.title"/>
         </a-form-model-item>
         <a-form-model-item label="副标题">
-          <a-input v-model="form.subName"/>
+          <a-input v-model="form.subTitle"/>
         </a-form-model-item>
         <a-form-model-item label="站点描述" help="用简洁的文字描述本站点">
           <a-input type="textarea" :autoSize="{ minRows: 3, maxRows: 6 }" v-model="form.description"/>
@@ -15,7 +15,7 @@
           <a-input v-model="form.recordNumber"/>
         </a-form-model-item>
         <a-form-model-item
-          v-if="form.domains.length===0"
+          v-if="form.friendLinks.length===0"
           label="友情链接"
         >
           <a-button block type="dashed" @click="addDomain">
@@ -24,10 +24,10 @@
         </a-form-model-item>
         <template v-else>
           <a-form-model-item
-            v-for="(domain, index) in form.domains"
+            v-for="(domain, index) in form.friendLinks"
             :key="index"
             :label="index === 0 ? '友情链接' : ''"
-            :prop="'domains.' + index"
+            :prop="'friendLinks.' + index"
             :rules="{
               required: true,
               message: '友情链接不能为空',
@@ -35,11 +35,11 @@
             }"
           >
             <a-input
-              v-model="form.domains[index]"
+              v-model="form.friendLinks[index]"
               style="width:calc(100% - 30px);margin-right: 6px;"
             />
             <a-icon
-              v-if="form.domains.length > 0"
+              v-if="form.friendLinks.length > 0"
               class="dynamic-delete-button"
               type="minus-circle-o"
               @click="removeDomain(index)"
@@ -54,16 +54,16 @@
         </template>
         <a-form-model-item label="站点语言">
           <a-select v-model="form.language">
-            <a-select-option value="shanghai">
+            <a-select-option value="Chinese">
               中文
             </a-select-option>
-            <a-select-option value="beijing">
+            <a-select-option value="EngLish">
               EngLish
             </a-select-option>
           </a-select>
         </a-form-model-item>
         <a-form-model-item label="关闭站点" help="关闭网站后，站点将不能被访问">
-          <a-switch v-model="form.isClosed" />
+          <a-switch v-model="form.isClose" />
         </a-form-model-item>
         <a-form-model-item label="禁止搜索隐藏爬取网站" help="搜索引擎将本着自觉自愿的原则对待该设置，并不是所有搜索引擎都会遵守这类设置">
           <a-switch v-model="form.isPrivate" />
@@ -87,25 +87,39 @@ export default {
   data () {
     return {
       form: {
-        domains: [],
-        name: '',
+        friendLinks: [],
+        title: '',
         language: '',
-        isClosed: false,
+        isClose: false,
         isPrivate: false,
-        subName: '',
+        subTitle: '',
         description: '',
         recordNumber: ''
       }
     };
   },
   created () {
+    this.fetchSiteSetting();
   },
   methods: {
+    fetchSiteSetting() {
+      $http.get('/common/site_setting')
+        .then(res => {
+          this.form.friendLinks = res.data.friendLinks;
+          this.form.title = res.data.title;
+          this.form.language = res.data.language;
+          this.form.isClose = res.data.isClose;
+          this.form.isPrivate = res.data.isPrivate;
+          this.form.subTitle = res.data.subTitle;
+          this.form.description = res.data.description;
+          this.form.recordNumber = res.data.recordNumber;
+        })
+    },
     removeDomain (index) {
-      this.form.domains.splice(index, 1);
+      this.form.friendLinks.splice(index, 1);
     },
     addDomain () {
-      this.form.domains.push('');
+      this.form.friendLinks.push('');
     },
     handleUpdateSetting () {
       this.$refs.form.validate(valid => {
@@ -113,7 +127,7 @@ export default {
           const data = {
             ...this.form
           }
-          $http.post('/site/update_site_setting', data)
+          $http.post('/common/update_site_setting', data)
             .then(res => {
               console.log(res);
             })
