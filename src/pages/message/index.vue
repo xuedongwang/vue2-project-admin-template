@@ -74,7 +74,7 @@
               <a slot="author">{{ message.name }}</a>
               <a-avatar
                 slot="avatar"
-                :src="message.avatar"
+                :src="message.avatar | autoPrefix"
                 alt="Han Solo"
               />
               <p slot="content">{{ message.message }}</p>
@@ -83,7 +83,7 @@
                   <a slot="author">{{ item.name }}</a>
                   <a-avatar
                     slot="avatar"
-                    :src="item.avatar"
+                    :src="item.avatar | autoPrefix"
                     :alt="item.name"
                   />
                   <p slot="content">{{ item.message }}</p>
@@ -112,7 +112,7 @@
       <a-comment>
         <a-avatar
           slot="avatar"
-          :src="user.avatar"
+          :src="user.avatar | autoPrefix"
           :alt="user.name"
         />
         <div slot="content">

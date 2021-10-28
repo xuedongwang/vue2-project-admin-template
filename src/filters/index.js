@@ -11,7 +11,7 @@ const filters = {
   },
   autoPrefix(url) {
     if (!url) return;
-    if (url.startsWith('http')) {
+    if (url.startsWith('http') || url.startsWith('//')) {
       return url;
     } else {
       return `${CDN_PREFIX}/${url}`;
