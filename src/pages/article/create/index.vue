@@ -192,6 +192,8 @@ export default {
           this.form.tags = res.data.tags;
           this.form.isAllowComment = res.data.isAllowComment;
           this.form.isOriginal = res.data.isOriginal;
+          this.form.originalLink = res.data.originalLink;
+          this.form.originalAuthor = res.data.originalAuthor;
           this.form.isPrivate = res.data.isPrivate;
           this.form.isTimedSend = res.data.isTimedSend;
           this.form.timedSendDate = res.data.timedSendDate;
