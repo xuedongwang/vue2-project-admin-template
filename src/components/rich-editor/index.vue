@@ -779,6 +779,7 @@ export default {
           vm.$emit('input', html);
         },
         extensions: [
+          Image,
           StarterKit,
           TaskList,
           TaskItem,
@@ -860,10 +861,42 @@ export default {
         color: #000;
         font-family: "Helvetica Neue, Helvetica, PingFang SC, Microsoft YaHei, Source Han Sans SC, Noto Sans CJK SC, WenQuanYi Micro Hei, sans-serif";
         p {
-          margin: 0;
+          line-height: inherit;
+          margin-top: 22px;
+          margin-bottom: 22px;
+          font-size: 15px;
+          color: #333;
+          code {
+            word-break: break-word;
+            border-radius: 2px;
+            overflow-x: auto;
+            background-color: #fff5f5;
+            color: #ff502c;
+            font-size: .87em;
+            padding: .065em .4em;
+            font-family: Menlo,Monaco,Consolas,Courier New,monospace;
+          }
         }
         &.ProseMirror-focused {
           outline: none;
+        }
+        h1 {
+          font-size: 28px;
+        }
+        h2 {
+          font-size: 24px;
+        }
+        h3 {
+          font-size: 20px;
+        }
+        h4 {
+          font-size: 18px;
+        }
+        h5 {
+          font-size: 16px;
+        }
+        h6 {
+          font-size: 14px;
         }
         p.is-editor-empty:first-child::before {
           content: attr(data-placeholder);
@@ -871,6 +904,26 @@ export default {
           color: #ced4da;
           pointer-events: none;
           height: 0;
+        }
+        ul {
+          padding-left: 28px;
+          p {
+            margin: 5px 0;
+          }
+        }
+        blockquote {
+          color: #666;
+          padding: 1px 23px;
+          margin: 22px 0;
+          border-left: 4px solid #cbcbcb;
+          background-color: #f8f8f8;
+          p {
+            margin: 10px 0;
+          }
+          &:after {
+            display: block;
+            content: "";
+          }
         }
       }
       .color {
