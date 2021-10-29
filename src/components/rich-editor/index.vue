@@ -583,6 +583,7 @@ import CharacterCount from '@tiptap/extension-character-count';
 import Typography from '@tiptap/extension-typography';
 import { ColorHighlighter } from './ColorHighlighter';
 import { SmilieReplacer } from './SmilieReplacer';
+import Image from '@tiptap/extension-image'
 import { fontSize, titleType, fontFamily } from './config';
 // import CodeBlockLowlight from '@tiptap/extension-code-block-lowlight'
 // load all highlight.js languages
@@ -723,6 +724,12 @@ export default {
         this.editor.chain().focus().setHardBreak().run();
       } else if (type === 'divider') {
         this.editor.chain().focus().setHorizontalRule().run();
+      } else if (type === 'image') {
+        const url = window.prompt('图片链接')
+        if (url) {
+          console.log(this.editor.chain().focus())
+          this.editor.chain().focus().setImage({ src: url }).run()
+        }
       }
     },
     handleSetTitleType (type) {
@@ -784,7 +791,7 @@ export default {
       this.table.column = 0;
     },
     handleSelectedTableCell () {
-      console.log('table', this.table.row, this.table.column);
+      this.editor.chain().focus().insertTable({ rows: this.table.row, cols: this.table.column, withHeaderRow: true }).run()
     },
     handleMousemove (e) {
       if (this.mouseenter) {
@@ -937,6 +944,11 @@ export default {
         }
         h6 {
           font-size: 14px;
+        }
+        img {
+          max-width: 100%;
+          display: block;
+          margin: auto;
         }
         pre {
           background: #2b2b2b;

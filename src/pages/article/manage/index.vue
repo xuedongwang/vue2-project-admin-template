@@ -265,6 +265,7 @@ export default {
         params
       })
         .then(() => {
+          this.handleSearch()
           this.$message.success('删除成功');
         })
     },
