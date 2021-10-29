@@ -571,6 +571,10 @@ import TaskItem from '@tiptap/extension-task-item';
 import TextAlign from '@tiptap/extension-text-align';
 import { Sketch as SketchPicker } from 'vue-color';
 import BackgroundColor from './extensions/background-color';
+import Table from '@tiptap/extension-table'
+import TableRow from '@tiptap/extension-table-row'
+import TableCell from '@tiptap/extension-table-cell'
+import TableHeader from '@tiptap/extension-table-header'
 import FontSize from './extensions/font-size';
 import SplitLine from './split-line';
 import Placeholder from '@tiptap/extension-placeholder';
@@ -579,6 +583,26 @@ import Typography from '@tiptap/extension-typography';
 import { ColorHighlighter } from './ColorHighlighter';
 import { SmilieReplacer } from './SmilieReplacer';
 import { fontSize, titleType, fontFamily } from './config';
+const CustomTableCell = TableCell.extend({
+  addAttributes() {
+    return {
+      // extend the existing attributes …
+      ...this.parent?.(),
+
+      // and add a new one …
+      backgroundColor: {
+        default: null,
+        parseHTML: element => element.getAttribute('data-background-color'),
+        renderHTML: attributes => {
+          return {
+            'data-background-color': attributes.backgroundColor,
+            style: `background-color: ${attributes.backgroundColor}`,
+          }
+        },
+      },
+    }
+  },
+})
 export default {
   props: {
     title: {
@@ -800,7 +824,16 @@ export default {
           }),
           Typography,
           ColorHighlighter,
-          SmilieReplacer
+          SmilieReplacer,
+          Table.configure({
+            resizable: true,
+          }),
+          TableRow,
+          TableHeader,
+          // Default TableCell
+          // TableCell,
+          // Custom TableCell with backgroundColor attribute
+          CustomTableCell,
         ]
       });
     },
@@ -925,6 +958,55 @@ export default {
             content: "";
           }
         }
+        table {
+          border-collapse: collapse;
+          table-layout: fixed;
+          width: 100%;
+          margin: 0;
+          overflow: hidden;
+
+          td,
+          th {
+            min-width: 1em;
+            border: 2px solid #ced4da;
+            padding: 3px 5px;
+            vertical-align: top;
+            box-sizing: border-box;
+            position: relative;
+
+            > * {
+              margin-bottom: 0;
+            }
+          }
+
+          th {
+            font-weight: bold;
+            text-align: left;
+            background-color: #f1f3f5;
+          }
+          .selectedCell:after {
+            z-index: 2;
+            position: absolute;
+            content: "";
+            left: 0; right: 0; top: 0; bottom: 0;
+            background: rgba(200, 200, 255, 0.4);
+            pointer-events: none;
+          }
+
+          .column-resize-handle {
+            position: absolute;
+            right: -2px;
+            top: 0;
+            bottom: -2px;
+            width: 4px;
+            background-color: #adf;
+            pointer-events: none;
+          }
+
+          p {
+            margin: 0;
+          }
+        }
       }
       .color {
         white-space: nowrap;
@@ -1041,6 +1123,14 @@ export default {
 
 </style>
 <style lang="scss">
+.tableWrapper {
+  overflow-x: auto;
+}
+
+.resize-cursor {
+  cursor: ew-resize;
+  cursor: col-resize;
+}
 @mixin scrollbar {
   &::-webkit-scrollbar {
       width: 4px;
