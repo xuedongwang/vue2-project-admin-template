@@ -579,10 +579,14 @@ import FontSize from './extensions/font-size';
 import SplitLine from './split-line';
 import Placeholder from '@tiptap/extension-placeholder';
 import CharacterCount from '@tiptap/extension-character-count';
+// import CodeBlock from '@tiptap/extension-code-block'
 import Typography from '@tiptap/extension-typography';
 import { ColorHighlighter } from './ColorHighlighter';
 import { SmilieReplacer } from './SmilieReplacer';
 import { fontSize, titleType, fontFamily } from './config';
+// import CodeBlockLowlight from '@tiptap/extension-code-block-lowlight'
+// load all highlight.js languages
+// import { lowlight } from 'lowlight'
 const CustomTableCell = TableCell.extend({
   addAttributes() {
     return {
@@ -834,6 +838,9 @@ export default {
           // TableCell,
           // Custom TableCell with backgroundColor attribute
           CustomTableCell,
+          // CodeBlockLowlight.configure({
+          //   lowlight,
+          // }),
         ]
       });
     },
@@ -930,6 +937,23 @@ export default {
         }
         h6 {
           font-size: 14px;
+        }
+        pre {
+          background: #2b2b2b;
+          color: #f8f8f2;
+          overflow: auto;
+          position: relative;
+          line-height: 1.75;
+          font-family: Menlo,Monaco,Consolas,Courier New,monospace;
+          caret-color: #fff;
+          code {
+            display: block;
+            padding: 16px 12px;
+            margin: 0;
+            font-size: 12px;
+            word-break: normal;
+            overflow-x: auto;
+          }
         }
         p.is-editor-empty:first-child::before {
           content: attr(data-placeholder);
