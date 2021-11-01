@@ -581,13 +581,17 @@ import Placeholder from '@tiptap/extension-placeholder';
 import CharacterCount from '@tiptap/extension-character-count';
 // import CodeBlock from '@tiptap/extension-code-block'
 import Typography from '@tiptap/extension-typography';
+import Link from '@tiptap/extension-link'
 import { ColorHighlighter } from './ColorHighlighter';
 import { SmilieReplacer } from './SmilieReplacer';
 import Image from '@tiptap/extension-image'
 import { fontSize, titleType, fontFamily } from './config';
-// import CodeBlockLowlight from '@tiptap/extension-code-block-lowlight'
+import CodeBlockLowlight from '@tiptap/extension-code-block-lowlight'
 // load all highlight.js languages
 // import { lowlight } from 'lowlight'
+import {lowlight} from 'lowlight'
+console.log(1, lowlight)
+
 const CustomTableCell = TableCell.extend({
   addAttributes() {
     return {
@@ -821,6 +825,7 @@ export default {
           TextAlign.configure({
             types: ['heading', 'paragraph']
           }),
+          Link,
           Underline,
           TextStyle,
           Color,
@@ -845,9 +850,9 @@ export default {
           // TableCell,
           // Custom TableCell with backgroundColor attribute
           CustomTableCell,
-          // CodeBlockLowlight.configure({
-          //   lowlight,
-          // }),
+          CodeBlockLowlight.configure({
+            lowlight,
+          }),
         ]
       });
     },
@@ -899,182 +904,6 @@ export default {
   }
   &-main {
     height: 100%;
-    /deep/ {
-      .ProseMirror {
-        word-break: break-all;
-        padding: 0 90px 20px;
-        height: 100%;
-        font-size: 16px;
-        color: #000;
-        font-family: "Helvetica Neue, Helvetica, PingFang SC, Microsoft YaHei, Source Han Sans SC, Noto Sans CJK SC, WenQuanYi Micro Hei, sans-serif";
-        p {
-          line-height: inherit;
-          margin-top: 22px;
-          margin-bottom: 22px;
-          font-size: 15px;
-          color: #333;
-          code {
-            word-break: break-word;
-            border-radius: 2px;
-            overflow-x: auto;
-            background-color: #fff5f5;
-            color: #ff502c;
-            font-size: .87em;
-            padding: .065em .4em;
-            font-family: Menlo,Monaco,Consolas,Courier New,monospace;
-          }
-        }
-        &.ProseMirror-focused {
-          outline: none;
-        }
-        h1 {
-          font-size: 28px;
-        }
-        h2 {
-          font-size: 24px;
-        }
-        h3 {
-          font-size: 20px;
-        }
-        h4 {
-          font-size: 18px;
-        }
-        h5 {
-          font-size: 16px;
-        }
-        h6 {
-          font-size: 14px;
-        }
-        img {
-          max-width: 100%;
-          display: block;
-          margin: auto;
-        }
-        pre {
-          background: #2b2b2b;
-          color: #f8f8f2;
-          overflow: auto;
-          position: relative;
-          line-height: 1.75;
-          font-family: Menlo,Monaco,Consolas,Courier New,monospace;
-          caret-color: #fff;
-          code {
-            display: block;
-            padding: 16px 12px;
-            margin: 0;
-            font-size: 12px;
-            word-break: normal;
-            overflow-x: auto;
-          }
-        }
-        p.is-editor-empty:first-child::before {
-          content: attr(data-placeholder);
-          float: left;
-          color: #ced4da;
-          pointer-events: none;
-          height: 0;
-        }
-        ul {
-          padding-left: 28px;
-          p {
-            margin: 5px 0;
-          }
-        }
-        blockquote {
-          color: #666;
-          padding: 1px 23px;
-          margin: 22px 0;
-          border-left: 4px solid #cbcbcb;
-          background-color: #f8f8f8;
-          p {
-            margin: 10px 0;
-          }
-          &:after {
-            display: block;
-            content: "";
-          }
-        }
-        table {
-          border-collapse: collapse;
-          table-layout: fixed;
-          width: 100%;
-          margin: 0;
-          overflow: hidden;
-
-          td,
-          th {
-            min-width: 1em;
-            border: 2px solid #ced4da;
-            padding: 3px 5px;
-            vertical-align: top;
-            box-sizing: border-box;
-            position: relative;
-
-            > * {
-              margin-bottom: 0;
-            }
-          }
-
-          th {
-            font-weight: bold;
-            text-align: left;
-            background-color: #f1f3f5;
-          }
-          .selectedCell:after {
-            z-index: 2;
-            position: absolute;
-            content: "";
-            left: 0; right: 0; top: 0; bottom: 0;
-            background: rgba(200, 200, 255, 0.4);
-            pointer-events: none;
-          }
-
-          .column-resize-handle {
-            position: absolute;
-            right: -2px;
-            top: 0;
-            bottom: -2px;
-            width: 4px;
-            background-color: #adf;
-            pointer-events: none;
-          }
-
-          p {
-            margin: 0;
-          }
-        }
-      }
-      .color {
-        white-space: nowrap;
-
-        &::before {
-          content: ' ';
-          display: inline-block;
-          width: 1em;
-          height: 1em;
-          border: 1px solid rgba(128, 128, 128, 0.3);
-          vertical-align: middle;
-          margin-right: 0.1em;
-          margin-bottom: 0.15em;
-          border-radius: 2px;
-          background-color: var(--color);
-        }
-      }
-      ul[data-type="taskList"] {
-        list-style: none;
-        padding: 0;
-        li {
-          display: flex;
-          > label {
-            flex: 0 0 auto;
-            margin-right: 0.5em;
-          }
-          p {
-            margin: 0;
-          }
-        }
-      }
-    }
   }
 }
 .rich-editor-menu {
@@ -1159,6 +988,171 @@ export default {
 
 </style>
 <style lang="scss">
+@import './style/code-style.scss';
+.rich-editor {
+  &-main {
+    .ProseMirror {
+      word-break: break-all;
+      padding: 0 90px 20px;
+      height: 100%;
+      font-size: 16px;
+      color: #000;
+      font-family: "Helvetica Neue, Helvetica, PingFang SC, Microsoft YaHei, Source Han Sans SC, Noto Sans CJK SC, WenQuanYi Micro Hei, sans-serif";
+      p {
+        line-height: inherit;
+        margin-top: 22px;
+        margin-bottom: 22px;
+        font-size: 15px;
+        color: #333;
+        code {
+          word-break: break-word;
+          border-radius: 2px;
+          overflow-x: auto;
+          background-color: #fff5f5;
+          color: #ff502c;
+          font-size: .87em;
+          padding: .065em .4em;
+          margin: 0 3px;
+          font-family: Menlo,Monaco,Consolas,Courier New,monospace;
+        }
+      }
+      &.ProseMirror-focused {
+        outline: none;
+      }
+      h1 {
+        font-size: 28px;
+      }
+      h2 {
+        font-size: 24px;
+      }
+      h3 {
+        font-size: 20px;
+      }
+      h4 {
+        font-size: 18px;
+      }
+      h5 {
+        font-size: 16px;
+      }
+      h6 {
+        font-size: 14px;
+      }
+      img {
+        max-width: 100%;
+        display: block;
+        margin: auto;
+      }
+      p.is-editor-empty:first-child::before {
+        content: attr(data-placeholder);
+        float: left;
+        color: #ced4da;
+        pointer-events: none;
+        height: 0;
+      }
+      ul {
+        padding-left: 28px;
+        p {
+          margin: 5px 0;
+        }
+      }
+      blockquote {
+        color: #666;
+        padding: 1px 23px;
+        margin: 22px 0;
+        border-left: 4px solid #cbcbcb;
+        background-color: #f8f8f8;
+        p {
+          margin: 10px 0;
+        }
+        &:after {
+          display: block;
+          content: "";
+        }
+      }
+      table {
+        border-collapse: collapse;
+        table-layout: fixed;
+        width: 100%;
+        margin: 0;
+        overflow: hidden;
+
+        td,
+        th {
+          min-width: 1em;
+          border: 2px solid #ced4da;
+          padding: 3px 5px;
+          vertical-align: top;
+          box-sizing: border-box;
+          position: relative;
+
+          > * {
+            margin-bottom: 0;
+          }
+        }
+
+        th {
+          font-weight: bold;
+          text-align: left;
+          background-color: #f1f3f5;
+        }
+        .selectedCell:after {
+          z-index: 2;
+          position: absolute;
+          content: "";
+          left: 0; right: 0; top: 0; bottom: 0;
+          background: rgba(200, 200, 255, 0.4);
+          pointer-events: none;
+        }
+
+        .column-resize-handle {
+          position: absolute;
+          right: -2px;
+          top: 0;
+          bottom: -2px;
+          width: 4px;
+          background-color: #adf;
+          pointer-events: none;
+        }
+
+        p {
+          margin: 0;
+        }
+      }
+    }
+    .color {
+      white-space: nowrap;
+
+      &::before {
+        content: ' ';
+        display: inline-block;
+        width: 1em;
+        height: 1em;
+        border: 1px solid rgba(128, 128, 128, 0.3);
+        vertical-align: middle;
+        margin-right: 0.1em;
+        margin-bottom: 0.15em;
+        border-radius: 2px;
+        background-color: var(--color);
+      }
+    }
+    ul[data-type="taskList"] {
+      list-style: none;
+      padding: 0;
+      li {
+        display: flex;
+        > label {
+          flex: 0 0 auto;
+          margin-right: 0.5em;
+        }
+        p {
+          margin: 0;
+        }
+      }
+    }
+  }
+}
+
+
 .tableWrapper {
   overflow-x: auto;
 }
