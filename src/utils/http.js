@@ -53,7 +53,7 @@ httpInstant.interceptors.response.use(response => {
     router.replace('/login');
     return Promise.reject(response);
   } else {
-    errorMsg();
+    errorMsg(response.data.message);
     return Promise.reject(response);
   }
 }, error => {
