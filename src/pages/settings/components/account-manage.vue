@@ -68,7 +68,10 @@
         </a-form-model-item>
         <a-form-model-item label="验证码">
           <a-input v-model="validateCaptcha">
-            <span slot="addonAfter" @click="getCaptcha(email)">获取验证码</span>
+            <template slot="addonAfter" >
+              <span v-if="isCountdown">{{ countdown }}</span>
+              <span v-else @click="getCaptcha(email)">获取验证码</span>
+            </template>
           </a-input>
         </a-form-model-item>
       </a-form-model>
@@ -108,6 +111,7 @@
 
 <script>
 import { titleMixin } from '@/mixins';
+import { INIT_COUNTDOWN } from '@/config/const';
 export default {
   mixins: [titleMixin],
   title() {
@@ -125,8 +129,14 @@ export default {
       validateCaptcha: '',
       email: '',
       password: '',
-      confirmPassword: ''
+      confirmPassword: '',
+      countdown: INIT_COUNTDOWN
     };
+  },
+  computed: {
+    isCountdown() {
+      return this.countdown < INIT_COUNTDOWN;
+    }
   },
   created () {
     this.email = this.$store.state.user.info.email;
@@ -155,6 +165,20 @@ export default {
         this.bindNewEmail();
       }
     },
+    resetCountdown() {
+      this.countdown = INIT_COUNTDOWN;
+    },
+    startCountdown() {
+      this.countdown --;
+      const timerID = setTimeout(() => {
+        clearTimeout(timerID);
+        if (this.countdown > 0) {
+          this.startCountdown();
+        } else {
+          this.resetCountdown();
+        }
+      }, 1000);
+    },
     getCaptcha(email) {
       const params = {
         email
@@ -163,6 +187,7 @@ export default {
         params
       })
         .then(res => {
+          this.startCountdown();
           this.$message.success('发送验证码成功')
         })
     },
