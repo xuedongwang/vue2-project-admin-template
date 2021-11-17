@@ -820,8 +820,6 @@ export default {
         extensions: [
           Image,
           StarterKit,
-          TaskList,
-          TaskItem,
           TextAlign.configure({
             types: ['heading', 'paragraph']
           }),
@@ -838,9 +836,6 @@ export default {
           CharacterCount.configure({
             limit: this.limit
           }),
-          Typography,
-          ColorHighlighter,
-          SmilieReplacer,
           Table.configure({
             resizable: true,
           }),
@@ -853,6 +848,11 @@ export default {
           CodeBlockLowlight.configure({
             lowlight,
           }),
+          TaskList,
+          TaskItem,
+          Typography,
+          ColorHighlighter,
+          // SmilieReplacer,
         ]
       });
     },

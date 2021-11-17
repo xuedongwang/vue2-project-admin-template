@@ -21,13 +21,22 @@
       </a-col>
     </a-row>
     <a-row>
-      <a-col :span="24">
-        <rich-editor
+      <a-col :span="20" :offset="2">
+        <!-- <rich-editor
           :title.sync="form.title"
           v-model="form.content"
           ref="richEditorRef"
           v-if="!loading"
-        ></rich-editor>
+        ></rich-editor> -->
+        <!-- :initial-value="initValue" -->
+        <input type="text" class="article-title" v-model="form.title">
+        <editor
+          api-key="0x9tmeopl6593uu56383wgbw274w9lbgs9eikd52upkq8yhj"
+          :init="config"
+          v-model="form.content"
+          @input="handleInput"
+        >
+        </editor>
       </a-col>
     </a-row>
     <a-drawer
@@ -101,6 +110,16 @@
 <script>
 import { titleMixin } from '@/mixins';
 import RichEditor from '@/components/rich-editor';
+import Editor from "@tinymce/tinymce-vue";
+import {
+  plugins,
+  toolbar,
+  fontsizeFormats,
+  fontFormats,
+  language,
+  contextmenu,
+  templates,
+} from "./config";
 const formRules = {
   title: [
     { required: true, message: '请输入文章标题', trigger: 'blur' },
@@ -121,7 +140,8 @@ export default {
     return this.isEdit ? '编辑文章' : '创建文章';
   },
   components: {
-    RichEditor
+    RichEditor,
+    editor: Editor,
   },
   computed: {
     isEdit () {
@@ -167,7 +187,63 @@ export default {
       buttonItemLayout: {
         span: 22,
         offset: 2
-      }
+      },
+      config: {
+        // skin:'oxide-dark',
+        language,
+        plugins,
+        toolbar: toolbar.join(" "),
+        height: 650, //编辑器高度
+        min_height: 400,
+        //可设置编辑区内容展示的css，谨慎使用
+        content_css: [],
+        branding: false,
+        contextmenu,
+        templates,
+        fontsize_formats: fontsizeFormats.join(" "),
+        font_formats: fontFormats.join(";"),
+        placeholder: "请再次输入内容",
+        link_list: [
+          { title: "预置链接1", value: "http://www.tinymce.com" },
+          { title: "预置链接2", value: "http://tinymce.ax-z.cn" },
+        ],
+        image_list: [
+          {
+            title: "预置图片1",
+            value: "https://www.tiny.cloud/images/glyph-tinymce@2x.png",
+          },
+          {
+            title: "预置图片2",
+            value: "https://www.baidu.com/img/bd_logo1.png",
+          },
+        ],
+        image_class_list: [
+          { title: "None", value: "" },
+          { title: "Some class", value: "class-name" },
+        ],
+        importcss_append: true,
+        file_picker_callback: function (callback, value, meta) {
+          console.log('file_picker_callback', callback, value, meta)
+          if (meta.filetype === "file") {
+            callback("https://www.baidu.com/img/bd_logo1.png", {
+              text: "My text",
+            });
+          }
+          if (meta.filetype === "image") {
+            callback("https://www.baidu.com/img/bd_logo1.png", {
+              alt: "My alt text",
+            });
+          }
+          if (meta.filetype === "media") {
+            callback("movie.mp4", {
+              source2: "alt.ogg",
+              poster: "https://www.baidu.com/img/bd_logo1.png",
+            });
+          }
+        },
+        toolbar_sticky: true,
+        autosave_ask_before_unload: false
+      },
     };
   },
   mounted() {
@@ -176,6 +252,9 @@ export default {
     this.fetchArticleDetail();
   },
   methods: {
+    handleInput(html) {
+      console.log(html)
+    },
     fetchArticleDetail() {
       this.loading = true;
       const params = {
@@ -259,4 +338,19 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.article-title {
+  color: #000;
+  border: 1px solid #ccc;
+  outline: 0;
+  font-size: 36px;
+  font-weight: bold;
+  display: block;
+  padding: 0;
+  width: 100%;
+  caret-color: #1890ff;
+  margin: 20px 0 10px 0;
+  &::placeholder {
+    color: #ccc
+  }
+}
 </style>
